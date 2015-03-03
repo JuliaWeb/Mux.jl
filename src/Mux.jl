@@ -2,11 +2,16 @@ module Mux
 
 export go, stack
 
+# This might be the smallest core ever.
+
 null(app, req) = Dict()
 go(app, req) = app(null, req)
 stack(a, b) = (app, req) -> a((_, req′) -> b(app, req′), req)
 stack(ms...) = reduce(stack, ms)
 
+# May as well provide a few conveniences, though.
+
+include("server.jl")
 include("basics.jl")
 
 end

@@ -1,19 +1,19 @@
 # Mux.jl
 
-Mux.jl is a middleware library for Julia, which allows web services to
-be easily composed from modular, independent components.
+Mux.jl is a middleware and routing library for Julia, which allows web
+services to be easily composed from modular, independent components.
 
 In Mux, everything is middleware. *Everything*. This means it's
 ridiculously composable – you can build up a portion of your app, then
 either just run it or carry on composing pieces together.
 
-Middleware is simply a function (see below)
+Middleware/apps are simply functions (see below)
 
     app, request -> response
 
 Apps are run with
 
-    go(app, req)
+    go(app, request)
 
 Middleware/apps are composed with:
 

@@ -105,7 +105,7 @@ a dict of properties, one to check user authectication, one to catches errors,
 etc. `mux` handles this too – just pass it multiple arguments:
 
 ```jl
-mux(todict, auth, catch_errors, app)
+mux(todict, auth, catch_errors)
 ```
 
 Again, `mux` returns a whole new app (a `request -> response` function)

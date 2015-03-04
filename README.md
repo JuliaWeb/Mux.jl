@@ -136,7 +136,7 @@ etc.
 
 ### Branching
 
-Mux.jl goes further with middelware, and expresses routing and decisions
+Mux.jl goes further with middleware, and expresses routing and decisions
 as middleware themselves. The key to this is the `branch` function,
 which takes
 

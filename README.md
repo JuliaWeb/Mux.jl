@@ -136,8 +136,8 @@ etc.
 
 ### Branching
 
-Unlike most web libraries, Mux.jl is powerful enough to express routing
-and decisions as middleware themselves. The key to this is the `branch` function,
+Mux.jl goes further with middelware, and expresses routing and decisions
+as middleware themselves. The key to this is the `branch` function,
 which takes
 
 1. a predicate to apply to the incoming request, and

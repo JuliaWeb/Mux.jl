@@ -1,11 +1,23 @@
-splitpath(p::String) = split(p, "/", false)
-splitpath(p) = p
+using HttpCommon
+
+export method, GET, route, page, probabilty
+
+# Mux's equivalent of `if`
 
 mif(p, app) = (app′, req) -> go(p(req) ? app : app′, req)
 
 # Request type
 
+method(m::String, app) = mif(req -> req[:method] == m, app)
+method(ms, app) = mif(req -> req[:method] in ms, app)
+method(m, app...) = method(m, stack(app...))
+
+GET(app...) = method("GET", app...)
+
 # Path routing
+
+splitpath(p::String) = split(p, "/", false)
+splitpath(p) = p
 
 function matchpath(target, path)
   length(target) > length(path) && return
@@ -35,5 +47,7 @@ route(p, app...) = route(p, stack(app...))
 page(p::Vector, app) = mif(req -> length(p) == length(req[:path]) && matchpath!(p, req), app)
 page(p::String, app) = page(splitpath(p), app)
 page(p, app...) = page(p, stack(app...))
+
+# Misc
 
 probabilty(x, app) = mif(_->rand()<x, app)

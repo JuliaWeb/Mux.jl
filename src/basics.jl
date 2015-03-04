@@ -1,21 +1,11 @@
-using Lazy, HttpServer, URIParser
+using Lazy, HttpServer, HttpCommon, URIParser
 
-export showreq, showres
+# Utils
 
-# Debugging
+pre(f) = (app, req) -> go(app, f(req))
+post(f) = (app, req) -> f(go(app, req))
 
-function showreq(app, req)
-  @show req
-  go(app, req)
-end
-
-function showres(app, req)
-  res = go(app, req)
-  @show res
-  return res
-end
-
-# Extracting basic info
+# Request
 
 function todict(app, req)
   req′ = Dict()
@@ -26,12 +16,33 @@ function todict(app, req)
   go(app, req′)
 end
 
-function parsequery(app, req)
+function splitquery(app, req)
   uri = URI(req[:resource])
   delete!(req, :resource)
-  req[:path]  = uri.path
+  req[:path]  = splitpath(uri.path)
   req[:query] = uri.query
   go(app, req)
 end
 
-defaults = stack(todict, parsequery)
+params!(req) = get!(req, :params, @d())
+
+# Response
+
+import HttpCommon: Response
+
+Response(d::Associative) =
+  Response(get(d, :status, 200),
+           get(d, :headers, HttpCommon.headers()),
+           get(d, :body, ""))
+
+response(d) = d
+response(s::String) = @d(:body=>s)
+
+toresponse(app, req) = Response(response(go(app, req)))
+
+mux(app) = (_, req) -> response(app(req))
+respond(res) = (_, req) -> response(res)
+
+reskey(k, v) = post(res -> merge!(res, @d(k=>v)))
+
+status(s) = reskey(:status, s)

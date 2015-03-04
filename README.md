@@ -105,7 +105,7 @@ a dict of properties, one to check user authectication, one to catches errors,
 etc. `mux` handles this too – just pass it multiple arguments:
 
 ```jl
-mux(todict, auth, catch_errors)
+mux(todict, auth, catch_errors, app)
 ```
 
 Again, `mux` returns a whole new app (a `request -> response` function)
@@ -116,7 +116,7 @@ the last to alter the outgoing response.
 Another neat thing we can do is to compose middleware into more middleware:
 
 ```jl
-mymidware = stack(todict, auth, catch_errors, app)
+mymidware = stack(todict, auth, catch_errors)
 mux(mymidware, app)
 ```
 

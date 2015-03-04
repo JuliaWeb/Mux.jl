@@ -1,7 +1,5 @@
 module Mux
 
-using Lazy
-
 export mux, stack
 
 # This might be the smallest core ever.

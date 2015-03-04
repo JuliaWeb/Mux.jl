@@ -6,14 +6,17 @@ type App
   warez
 end
 
-macro app (name, warez)
+macro app (def)
+  @assert isexpr(def, :(=))
+  name, warez = def.args
+  warez = isexpr(warez, :tuple) ? Expr(:call, :mux, map(esc, warez.args)...) : warez
   quote
     if isdefined($(Expr(:quote, name)))
-      $(esc(name)).warez = $(esc(warez))
+      $(esc(name)).warez = $warez
     else
-      const $(esc(name)) = App($(esc(warez)))
+      const $(esc(name)) = App($warez)
     end
-    return $(esc(name))
+    nothing
   end
 end
 

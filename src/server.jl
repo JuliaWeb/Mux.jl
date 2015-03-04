@@ -6,8 +6,6 @@ type App
   warez
 end
 
-go(app::App, req) = go(app.warez, req)
-
 macro app (name, warez)
   quote
     if isdefined($(Expr(:quote, name)))
@@ -21,7 +19,7 @@ end
 
 function serve(app::App, port = 8000)
   http = HttpHandler() do req, res
-    return go(app, req)
+    return app.warez(req)
   end
   http.events["error"]  = (client, error) -> println(error)
   http.events["listen"] = (port)          -> println("Listening on $port...")

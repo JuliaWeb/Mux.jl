@@ -4,8 +4,8 @@ export respond, mux
 
 # Utils
 
-pre(f) = (app, req) -> go(app, f(req))
-post(f) = (app, req) -> f(go(app, req))
+pre(f) = (app, req) -> app(f(req))
+post(f) = (app, req) -> f(app(req))
 
 # Request
 
@@ -15,7 +15,7 @@ function todict(app, req)
   req′[:headers]  = req.headers
   req′[:resource] = req.resource
   req.data != "" && (req′[:data] = req.data)
-  go(app, req′)
+  app(req′)
 end
 
 function splitquery(app, req)
@@ -23,7 +23,7 @@ function splitquery(app, req)
   delete!(req, :resource)
   req[:path]  = splitpath(uri.path)
   req[:query] = uri.query
-  go(app, req)
+  app(req)
 end
 
 params!(req) = get!(req, :params, @d())
@@ -40,10 +40,9 @@ Response(d::Associative) =
 response(d) = d
 response(s::String) = @d(:body=>s)
 
-toresponse(app, req) = Response(response(go(app, req)))
+toresponse(app, req) = Response(response(app(req)))
 
-mux(app) = (_, req) -> response(app(req))
-respond(res) = (_, req) -> response(res)
+respond(res) = req -> response(res)
 
 reskey(k, v) = post(res -> merge!(res, @d(k=>v)))
 
@@ -71,7 +70,7 @@ error_phrases = ["Looks like someone needs to pay their developers more."
 
 function basiccatch(app, req)
   try
-    go(app, req)
+    app(req)
   catch e
     io = IOBuffer()
     println(io, mux_css)

@@ -1,3 +1,3 @@
 # Page not found
 
-notfound(s = "Not found") = stack(status(404), respond(s))
+notfound(s = "Not found") = mux(status(404), respond(s))

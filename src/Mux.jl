@@ -1,14 +1,20 @@
 module Mux
 
-export go, stack
+using Lazy
+
+export mux, stack
 
 # This might be the smallest core ever.
 
-null(app, req) = Dict()
-go(app, req) = app(null, req)
-stack(a, b) = (app, req) -> a((_, req) -> b(app, req), req)
-stack(ms...) = reduce(stack, ms)
-branch(p, app) = (app′, req) -> go(p(req) ? app : app′, req)
+mux(f) = f
+mux(m, f) = x -> m(f, x)
+mux(ms...) = foldr(mux, ms)
+
+stack(m) = m
+stack(m, n) = (f, x) -> m(mux(n, f), x)
+stack(ms...) = foldl(stack, ms)
+
+branch(p, t) = (f, r) -> (p(r) ? t : f)(r)
 
 # May as well provide a few conveniences, though.
 

@@ -6,7 +6,7 @@ export method, GET, route, page, probabilty
 
 method(m::String, app) = branch(req -> req[:method] == m, app)
 method(ms, app) = branch(req -> req[:method] in ms, app)
-method(m, app...) = method(m, stack(app...))
+method(m, app...) = method(m, mux(app...))
 
 GET(app...) = method("GET", app...)
 
@@ -38,11 +38,11 @@ end
 
 route(p, app) = branch(req -> matchpath!(p, req), app)
 route(p::String, app) = route(splitpath(p), app)
-route(p, app...) = route(p, stack(app...))
+route(p, app...) = route(p, mux(app...))
 
 page(p::Vector, app) = branch(req -> length(p) == length(req[:path]) && matchpath!(p, req), app)
 page(p::String, app) = page(splitpath(p), app)
-page(p, app...) = page(p, stack(app...))
+page(p, app...) = page(p, mux(app...))
 page(app) = page([], app)
 
 # Misc

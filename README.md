@@ -36,7 +36,7 @@ re-evalute `serve(test)`)
 
 ## Technical Overview
 
-Mux.jl at heart a control flow library, with a [very small core](https://github.com/one-more-minute/Mux.jl/blob/master/src/Mux.jl#L7-L15). It's not important that you
+Mux.jl is at heart a control flow library, with a [very small core](https://github.com/one-more-minute/Mux.jl/blob/master/src/Mux.jl#L7-L15). It's not important that you
 understand the code as long as you understand what it acheives.
 
 There are three concepts core to Mux.jl: Middleware (which should be familiar

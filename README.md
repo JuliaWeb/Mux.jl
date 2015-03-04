@@ -146,8 +146,7 @@ which takes
 For example:
 
 ```jl
-mux(branch(_ -> rand() < 0.1,
-           respond("Hello")),
+mux(branch(_ -> rand() < 0.1, respond("Hello")),
     respond("Hi"))
 ```
 
@@ -155,9 +154,8 @@ In this example, we ignore the request and simply return true 10% of the time.
 You can test this in the repl by calling
 
 ```jl
-mux(branch(_ -> rand() < 0.1,
-                  respond("Hello")),
-           respond("Hi"))(nothing)
+mux(branch(_ -> rand() < 0.1, respond("Hello")),
+    respond("Hi"))(nothing)
 ```
 
 (since the request is ignored anyway, it doesn't matter if we set it to `nothing`).

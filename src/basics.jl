@@ -62,9 +62,10 @@ mux_css = """
 error_phrases = ["Looks like someone needs to pay their developers more."
                  "Someone order a thousand more monkeys! And a million more typewriters!"
                  "Maybe it's time for some sleep?"
-                 "Don't bother debugging this one – it's almost definitely quantum."
+                 "Don't bother debugging this one – it's almost definitely a quantum thingy."
                  "It probably won't happen again though, right?"
                  "F5! F5! F5!"
+                 "F5! F5! FFS!"
                  "On the bright side, nothing has exploded. Yet."
                  "If this error has frustrated you, try clicking <u>here</u>."]
 

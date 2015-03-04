@@ -1,6 +1,6 @@
 module Mux
 
-export mux, stack
+export mux, stack, branch
 
 # This might be the smallest core ever.
 

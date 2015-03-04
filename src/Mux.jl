@@ -17,6 +17,6 @@ include("basics.jl")
 include("routing.jl")
 include("implementations.jl")
 
-defaults = stack(todict, splitquery, toresponse)
+defaults = stack(todict, basiccatch, splitquery, toresponse)
 
 end

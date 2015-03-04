@@ -48,3 +48,38 @@ respond(res) = (_, req) -> response(res)
 reskey(k, v) = post(res -> merge!(res, @d(k=>v)))
 
 status(s) = reskey(:status, s)
+
+# Error handling
+
+mux_css = """
+  <style>
+  body { font-family: sans-serif; padding:50px; }
+  .box { background: #fcfcff; padding:20px; border: 1px solid #ddd; border-radius:5px; }
+  pre { line-height:1.5 }
+  u { cursor: pointer }
+  </style>
+  """
+
+error_phrases = ["Looks like someone needs to pay their developers more."
+                 "Someone order a thousand more monkeys! And a million more typewriters!"
+                 "Maybe it's time for some sleep?"
+                 "Don't bother debugging this one – it's almost definitely quantum."
+                 "It probably won't happen again though, right?"
+                 "F5! F5! F5!"
+                 "On the bright side, nothing has exploded. Yet."
+                 "If this error has frustrated you, try clicking <u>here</u>."]
+
+function basiccatch(app, req)
+  try
+    go(app, req)
+  catch e
+    io = IOBuffer()
+    println(io, mux_css)
+    println(io, "<h1>Internal Error</h1>")
+    println(io, "<p>$(error_phrases[rand(1:length(error_phrases))])</p>")
+    println(io, "<pre class=\"box\">")
+    showerror(io, e, catch_backtrace())
+    println(io, "</pre>")
+    return @d(:status => 500, :body => takebuf_string(io))
+  end
+end

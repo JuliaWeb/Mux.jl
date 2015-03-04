@@ -1,5 +1,7 @@
 using Lazy, HttpServer, HttpCommon, URIParser
 
+export respond, mux
+
 # Utils
 
 pre(f) = (app, req) -> go(app, f(req))

@@ -11,12 +11,12 @@ go(app::App, req) = go(app.warez, req)
 macro app (name, warez)
   quote
     if isdefined($(Expr(:quote, name)))
-      $name.warez = $warez
+      $(esc(name)).warez = $(esc(warez))
     else
-      const $name = App($warez)
+      const $(esc(name)) = App($(esc(warez)))
     end
-    return $name
-  end |> esc
+    return $(esc(name))
+  end
 end
 
 function serve(app::App, port = 8000)

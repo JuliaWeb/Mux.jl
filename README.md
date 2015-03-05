@@ -2,6 +2,7 @@
 
 ```jl
 Pkg.clone("http://github.com/one-more-minute/Mux.jl")
+Pkg.checkout("Lazy")
 ```
 
 Mux.jl gives your Julia web services some closure. Mux allows you to

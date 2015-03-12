@@ -26,6 +26,16 @@ function splitquery(app, req)
   app(req)
 end
 
+
+function withwebsocket(sock)
+  # giving this function a name because the error
+  # messages get better.
+  function websocket_middleware(app, req)
+    req[:websock] = sock
+    app(req)
+  end
+end
+
 params!(req) = get!(req, :params, @d())
 
 # Response

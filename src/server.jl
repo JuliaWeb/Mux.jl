@@ -1,4 +1,4 @@
-using HttpServer, Lazy
+using HttpServer, Lazy, WebSockets
 
 export @app, serve
 
@@ -20,12 +20,18 @@ macro app (def)
   end
 end
 
+
 function serve(app::App, port = 8000)
   http = HttpHandler() do req, res
-    return app.warez(req)
+    return mux(todict, app.warez)(req)
   end
   http.events["error"]  = (client, error) -> println(error)
   http.events["listen"] = (port)          -> println("Listening on $port...")
-  @async @errs run(Server(http), port)
-  return
+  websock = WebSocketHandler() do req, sock
+      mux(todict, withwebsocket(sock), app.warez)(req)
+      if isopen(sock)
+          close(sock)
+      end
+  end
+  @async @errs run(Server(http, websock), port)
 end

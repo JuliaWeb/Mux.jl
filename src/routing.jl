@@ -1,6 +1,6 @@
 using HttpCommon
 
-export method, GET, route, page, probabilty
+export method, GET, websocket, route, page, probabilty
 
 # Request type
 
@@ -35,6 +35,8 @@ function matchpath!(target, req)
   splice!(req[:path], 1:length(target))
   return true
 end
+
+websocket(app) = branch(req->haskey(req, :websocket), app)
 
 route(p, app) = branch(req -> matchpath!(p, req), app)
 route(p::String, app) = route(splitpath(p), app)

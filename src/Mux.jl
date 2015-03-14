@@ -13,6 +13,7 @@ stack(m, n) = (f, x) -> m(mux(n, f), x)
 stack(ms...) = foldl(stack, ms)
 
 branch(p, t) = (f, x) -> (p(x) ? t : f)(x)
+branch(p, t...) = branch(p, mux(t...))
 
 # May as well provide a few conveniences, though.
 

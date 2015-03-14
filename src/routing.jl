@@ -4,9 +4,8 @@ export method, GET, route, page, probabilty
 
 # Request type
 
-method(m::String, app) = branch(req -> req[:method] == m, app)
-method(ms, app) = branch(req -> req[:method] in ms, app)
-method(m, app...) = method(m, mux(app...))
+method(m::String, app...) = branch(req -> req[:method] == m, app...)
+method(ms, app...) = branch(req -> req[:method] in ms, app...)
 
 GET(app...) = method("GET", app...)
 
@@ -36,15 +35,13 @@ function matchpath!(target, req)
   return true
 end
 
-route(p, app) = branch(req -> matchpath!(p, req), app)
-route(p::String, app) = route(splitpath(p), app)
-route(p, app...) = route(p, mux(app...))
+route(p, app...) = branch(req -> matchpath!(p, req), app...)
+route(p::String, app...) = route(splitpath(p), app...)
 
-page(p::Vector, app) = branch(req -> length(p) == length(req[:path]) && matchpath!(p, req), app)
-page(p::String, app) = page(splitpath(p), app)
-page(p, app...) = page(p, mux(app...))
-page(app) = page([], app)
+page(p::Vector, app...) = branch(req -> length(p) == length(req[:path]) && matchpath!(p, req), app...)
+page(p::String, app...) = page(splitpath(p), app...)
+page(app...) = page([], app...)
 
 # Misc
 
-probabilty(x, app) = branch(_->rand()<x, app)
+probabilty(x, app...) = branch(_->rand()<x, app...)

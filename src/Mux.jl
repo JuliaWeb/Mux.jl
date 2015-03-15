@@ -20,9 +20,10 @@ branch(p, t...) = branch(p, mux(t...))
 include("server.jl")
 include("basics.jl")
 include("routing.jl")
-include("implementations/basic.jl")
 
 include("websockets.jl")
+
+include("examples/basic.jl")
 
 defaults = stack(todict, basiccatch, splitquery, toresponse)
 wdefaults = stack(todict, wcatch, splitquery)

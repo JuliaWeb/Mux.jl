@@ -24,6 +24,7 @@ include("routing.jl")
 include("websockets.jl")
 
 include("examples/basic.jl")
+include("examples/files.jl")
 
 defaults = stack(todict, basiccatch, splitquery, toresponse)
 wdefaults = stack(todict, wcatch, splitquery)

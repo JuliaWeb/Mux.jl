@@ -36,7 +36,7 @@ import HttpCommon: Response
 
 Response(d::Associative) =
   Response(get(d, :status, 200),
-           get(d, :headers, HttpCommon.headers()),
+           convert(Headers, get(d, :headers, HttpCommon.headers())),
            get(d, :body, ""))
 
 response(d) = d

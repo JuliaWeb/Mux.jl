@@ -37,10 +37,12 @@ end
 
 route(p, app...) = branch(req -> matchpath!(p, req), app...)
 route(p::String, app...) = route(splitpath(p), app...)
+route(app::Function, p) = route(p, app)
 
 page(p::Vector, app...) = branch(req -> length(p) == length(req[:path]) && matchpath!(p, req), app...)
 page(p::String, app...) = page(splitpath(p), app...)
 page(app...) = page([], app...)
+page(app::Function, p) = page(p, app)
 
 # Misc
 

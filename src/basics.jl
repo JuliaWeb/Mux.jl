@@ -9,14 +9,16 @@ post(f) = (app, req) -> f(app(req))
 
 # Request
 
-function todict(app, req)
+function todict(req::Request)
   req′ = Dict()
   req′[:method]   = req.method
   req′[:headers]  = req.headers
   req′[:resource] = req.resource
   req.data != "" && (req′[:data] = req.data)
-  app(req′)
+  return req′
 end
+
+todict(app, req) = app(todict(req))
 
 function splitquery(app, req)
   uri = URI(req[:resource])

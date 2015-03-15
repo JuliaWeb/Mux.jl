@@ -22,6 +22,9 @@ include("basics.jl")
 include("routing.jl")
 include("implementations.jl")
 
+include("websockets.jl")
+
 defaults = stack(todict, basiccatch, splitquery, toresponse)
+wdefaults = stack(todict, wcatch, splitquery)
 
 end

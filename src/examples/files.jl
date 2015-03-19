@@ -36,8 +36,10 @@ files_css = """
   .size { text-align: right; }
   """
 
-filelink(root, f) =
-  a(@d(:href=>"$f/"), isfile(joinpath(root, f)) ? f : "$f/")
+function filelink(root, f)
+  isdir(joinpath(root, f)) && (f = "$f/")
+  a(@d(:href=>f), f)
+end
 
 dirresponse(f) =
   html(head(style([mux_css, files_css])),

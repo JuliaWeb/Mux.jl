@@ -39,6 +39,8 @@ Response(d::Associative) =
            convert(Headers, get(d, :headers, HttpCommon.headers())),
            get(d, :body, ""))
 
+Response(o) = Response(stringmime(MIME"text/html"(), o))
+
 response(d) = d
 response(s::String) = @d(:body=>s)
 

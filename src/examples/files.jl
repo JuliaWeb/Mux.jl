@@ -1,3 +1,5 @@
+using Hiccup
+
 export files
 
 Base.joinpath() = ""
@@ -16,6 +18,18 @@ fileresponse(f) = @d(:file => f,
                      :body => open(readbytes, f),
                      :headers => fileheaders(f))
 
-files(root) =
-  branch(req -> validpath(root, joinpath(req[:path]...), dirs=false),
-         req -> fileresponse(joinpath(root, req[:path]...)))
+dirresponse(f) =
+  html(head(),
+       body(h2("Files"),
+            div(table([tr(td(a(@d(:href=>"$x/"), x)),
+                          td(string(filesize(joinpath(f, x)))))
+                       for x in ["..", readdir(f)...]]))))
+
+fresp(f) =
+  isfile(f) ? fileresponse(f) :
+  isdir(f) ?  dirresponse(f) :
+  error("$f doesn't exist")
+
+files(root, dirs = true) =
+  branch(req -> validpath(root, joinpath(req[:path]...), dirs=dirs),
+         req -> fresp(joinpath(root, req[:path]...)))

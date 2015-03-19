@@ -40,8 +40,8 @@ filelink(root, f) =
   a(@d(:href=>"$f/"), isfile(joinpath(root, f)) ? f : "$f/")
 
 dirresponse(f) =
-  html(head(Hiccup.style([mux_css, files_css])),
-       body(h2("Files"),
+  html(head(style([mux_css, files_css])),
+       body(h1("Files"),
             div(".box", table([tr(td(".file", filelink(f, x)),
                                   td(".size", string(filesize(joinpath(f, x)))))
                                for x in ["..", readdir(f)...]]))))

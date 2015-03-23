@@ -10,7 +10,10 @@ function validpath(root, path; dirs = true)
     (isfile(full) || (dirs && isdir(full)))
 end
 
-extension(f) = match(r"(?<=\.)[^\\/]*$|", f).match
+ormatch(r::RegexMatch, x) = r.match
+ormatch(r::Nothing, x) = x
+
+extension(f) = ormatch(match(r"(?<=\.)[^\\/]*$", f), "")
 
 fileheaders(f) = @d("Content-Type" => get(mimetypes, extension(f), "application/octet-stream"))
 

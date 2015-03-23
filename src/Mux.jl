@@ -1,5 +1,7 @@
 module Mux
 
+using Hiccup
+
 export mux, stack, branch
 
 # This might be the smallest core ever.

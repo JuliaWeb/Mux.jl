@@ -13,7 +13,7 @@ end
 ormatch(r::RegexMatch, x) = r.match
 ormatch(r::Nothing, x) = x
 
-extension(f) = ormatch(match(r"(?<=\.)[^\\/]*$", f), "")
+extension(f) = ormatch(match(r"(?<=\.)[^\.\\/]*$", f), "")
 
 fileheaders(f) = @d("Content-Type" => get(mimetypes, extension(f), "application/octet-stream"))
 

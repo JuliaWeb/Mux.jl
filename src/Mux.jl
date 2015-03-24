@@ -1,7 +1,5 @@
 module Mux
 
-using Hiccup
-
 export mux, stack, branch
 
 # This might be the smallest core ever.
@@ -18,6 +16,8 @@ branch(p, t) = (f, x) -> (p(x) ? t : f)(x)
 branch(p, t...) = branch(p, mux(t...))
 
 # May as well provide a few conveniences, though.
+
+using Hiccup
 
 include("server.jl")
 include("basics.jl")

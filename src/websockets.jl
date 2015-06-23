@@ -1,6 +1,6 @@
 using WebSockets
 
-function todict(rc::(Request, WebSocket))
+function todict(rc::@compat Tuple{Request, WebSocket})
   req, client = rc
   req′ = todict(req)
   req′[:socket] = client

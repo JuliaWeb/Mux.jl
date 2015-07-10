@@ -36,7 +36,7 @@ re-evalute `serve(test)`)
 
 ## Technical Overview
 
-Mux.jl is at heart a control flow library, with a [very small core](https://github.com/one-more-minute/Mux.jl/blob/master/src/Mux.jl#L7-L16). It's not important to understand that code exactly as long as you understand what it acheives.
+Mux.jl is at heart a control flow library, with a [very small core](https://github.com/one-more-minute/Mux.jl/blob/master/src/Mux.jl#L7-L16). It's not important to understand that code exactly as long as you understand what it achieves.
 
 There are three concepts core to Mux.jl: Middleware (which should be familiar
 from the web libraries of other languages), stacking, and branching.
@@ -100,7 +100,7 @@ just didn't have to write it by hand.
 ### Stacking
 
 Now suppose you have lots of middleware – one to parse the HTTP request into
-a dict of properties, one to check user authectication, one to catches errors,
+a dict of properties, one to check user authentication, one to catches errors,
 etc. `mux` handles this too – just pass it multiple arguments:
 
 ```jl
@@ -167,7 +167,7 @@ probabilty(x, app) = branch(_ -> rand() < x, app)
 
 ### Utilities
 
-Despite the fact that endpoints and midware are so important in Mux,
+Despite the fact that endpoints and middleware are so important in Mux,
 it's common to not write them by hand. For example, `respond("hi")`
 creates a function `_ -> "hi"` which can be used as an endpoint.
 Equally, functions like `status(404)` will create middleware which

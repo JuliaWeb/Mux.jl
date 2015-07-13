@@ -1,4 +1,5 @@
 using Hiccup
+import Hiccup.div
 
 export files
 

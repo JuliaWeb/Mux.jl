@@ -1,4 +1,5 @@
 using Hiccup
+import Hiccup.div
 
 export files
 
@@ -6,7 +7,7 @@ Base.joinpath() = ""
 
 function validpath(root, path; dirs = true)
   full = normpath(root, path)
-  beginswith(full, root) &&
+  @compat startswith(full, root) &&
     (isfile(full) || (dirs && isdir(full)))
 end
 

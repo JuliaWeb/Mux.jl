@@ -1,5 +1,7 @@
 using HttpServer, Lazy
 
+import Base.Meta.isexpr
+
 export @app, serve
 
 # `App` is just a box which allows the server to be
@@ -11,7 +13,7 @@ type App
   warez
 end
 
-macro app (def)
+macro app(def)
   @assert isexpr(def, :(=))
   name, warez = def.args
   warez = isexpr(warez, :tuple) ? Expr(:call, :mux, map(esc, warez.args)...) : warez

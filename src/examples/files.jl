@@ -1,5 +1,6 @@
 using Hiccup
 import Hiccup.div
+import HttpServer.mimetypes
 
 export files
 

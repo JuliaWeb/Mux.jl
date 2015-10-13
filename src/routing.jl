@@ -4,14 +4,14 @@ export method, GET, route, page, probabilty
 
 # Request type
 
-method(m::String, app...) = branch(req -> req[:method] == m, app...)
+method(m::AbstractString, app...) = branch(req -> req[:method] == m, app...)
 method(ms, app...) = branch(req -> req[:method] in ms, app...)
 
 GET(app...) = method("GET", app...)
 
 # Path routing
 
-splitpath(p::String) = @compat split(p, "/", keep=false)
+splitpath(p::AbstractString) = @compat split(p, "/", keep=false)
 splitpath(p) = p
 
 function matchpath(target, path)
@@ -36,11 +36,11 @@ function matchpath!(target, req)
 end
 
 route(p, app...) = branch(req -> matchpath!(p, req), app...)
-route(p::String, app...) = route(splitpath(p), app...)
+route(p::AbstractString, app...) = route(splitpath(p), app...)
 route(app::Function, p) = route(p, app)
 
 page(p::Vector, app...) = branch(req -> length(p) == length(req[:path]) && matchpath!(p, req), app...)
-page(p::String, app...) = page(splitpath(p), app...)
+page(p::AbstractString, app...) = page(splitpath(p), app...)
 page(app...) = page([], app...)
 page(app::Function, p) = page(p, app)
 

@@ -42,7 +42,7 @@ Response(d::Associative) =
 Response(o) = Response(stringmime(MIME"text/html"(), o))
 
 response(d) = d
-response(s::String) = @d(:body=>s)
+response(s::AbstractString) = @d(:body=>s)
 
 toresponse(app, req) = Response(response(app(req)))
 

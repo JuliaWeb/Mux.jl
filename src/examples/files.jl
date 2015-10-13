@@ -1,3 +1,5 @@
+using Compat
+
 using Hiccup
 import Hiccup.div
 import HttpServer.mimetypes
@@ -13,7 +15,7 @@ function validpath(root, path; dirs = true)
 end
 
 ormatch(r::RegexMatch, x) = r.match
-ormatch(r::Nothing, x) = x
+ormatch(r::(@compat Void), x) = x
 
 extension(f) = ormatch(match(r"(?<=\.)[^\.\\/]*$", f), "")
 

@@ -28,7 +28,7 @@ function splitquery(app, req)
   app(req)
 end
 
-params!(req) = get!(req, :params, @d())
+params!(req) = get!(req, :params, d())
 
 # Response
 
@@ -42,13 +42,13 @@ Response(d::Associative) =
 Response(o) = Response(stringmime(MIME"text/html"(), o))
 
 response(d) = d
-response(s::AbstractString) = @d(:body=>s)
+response(s::AbstractString) = d(:body=>s)
 
 toresponse(app, req) = Response(response(app(req)))
 
 respond(res) = req -> response(res)
 
-reskey(k, v) = post(res -> merge!(res, @d(k=>v)))
+reskey(k, v) = post(res -> merge!(res, d(k=>v)))
 
 status(s) = reskey(:status, s)
 
@@ -84,6 +84,6 @@ function basiccatch(app, req)
     println(io, "<pre class=\"box\">")
     showerror(io, e, catch_backtrace())
     println(io, "</pre>")
-    return @d(:status => 500, :body => takebuf_string(io))
+    return d(:status => 500, :body => takebuf_string(io))
   end
 end

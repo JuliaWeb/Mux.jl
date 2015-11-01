@@ -16,7 +16,7 @@ splitpath(p) = p
 
 function matchpath(target, path)
   length(target) > length(path) && return
-  params = @d()
+  params = d()
   for i = 1:length(target)
     if @compat startswith(target[i], ":")
       params[symbol(target[i][2:end])] = path[i]

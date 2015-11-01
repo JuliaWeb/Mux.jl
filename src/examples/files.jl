@@ -19,11 +19,11 @@ ormatch(r::(@compat Void), x) = x
 
 extension(f) = ormatch(match(r"(?<=\.)[^\.\\/]*$", f), "")
 
-fileheaders(f) = @d("Content-Type" => get(mimetypes, extension(f), "application/octet-stream"))
+fileheaders(f) = d("Content-Type" => get(mimetypes, extension(f), "application/octet-stream"))
 
-fileresponse(f) = @d(:file => f,
-                     :body => open(readbytes, f),
-                     :headers => fileheaders(f))
+fileresponse(f) = d(:file => f,
+                    :body => open(readbytes, f),
+                    :headers => fileheaders(f))
 
 fresp(f) =
   isfile(f) ? fileresponse(f) :
@@ -45,7 +45,7 @@ files_css = """
 
 function filelink(root, f)
   isdir(joinpath(root, f)) && (f = "$f/")
-  a(@d(:href=>f), f)
+  a(d(:href=>f), f)
 end
 
 dirresponse(f) =

@@ -41,10 +41,7 @@ end
 
 const default_port = 8000
 
-function serve(s::Server, port = default_port)
-  @async @errs run(s, port)
-  return
-end
+serve(s::Server, port = default_port) = @async @errs run(s, port)
 
 serve(h::App, port = default_port) =
   serve(Server(http_handler(h)), port)

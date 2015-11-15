@@ -3,14 +3,13 @@ os:
   - linux
   - osx
 julia:
-  - 0.3
   - 0.4
   - nightly
 notifications:
   email: false
 script:
-    - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-    - julia -e 'Pkg.clone(pwd())'
-    - julia -e 'Pkg.test("Mux", coverage=true)'
+  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+  - julia -e 'Pkg.clone(pwd()); Pkg.build("Mux")'
+  - julia -e 'Pkg.test("Mux", coverage=true)'
 after_success:
-    - julia -e 'cd(Pkg.dir("Mux")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
+  - julia -e 'cd(Pkg.dir("Mux")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'

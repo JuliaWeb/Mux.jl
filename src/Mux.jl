@@ -18,7 +18,6 @@ branch(p, t...) = branch(p, mux(t...))
 # May as well provide a few conveniences, though.
 
 using Hiccup
-using Compat
 
 include("server.jl")
 include("basics.jl")

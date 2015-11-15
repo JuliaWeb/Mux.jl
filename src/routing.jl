@@ -11,14 +11,14 @@ GET(app...) = method("GET", app...)
 
 # Path routing
 
-splitpath(p::AbstractString) = @compat split(p, "/", keep=false)
+splitpath(p::AbstractString) = split(p, "/", keep=false)
 splitpath(p) = p
 
 function matchpath(target, path)
   length(target) > length(path) && return
   params = d()
   for i = 1:length(target)
-    if @compat startswith(target[i], ":")
+    if startswith(target[i], ":")
       params[symbol(target[i][2:end])] = path[i]
     else
       target[i] == path[i] || return

@@ -1,6 +1,8 @@
 # Mux.jl
 
 [![Build Status](https://travis-ci.org/JuliaWeb/Mux.jl.svg?branch=master)](https://travis-ci.org/JuliaWeb/Mux.jl)
+[![codecov.io](https://codecov.io/github/JuliaWeb/Mux.jl/coverage.svg?branch=master)](https://codecov.io/github/JuliaWeb/Mux.jl?branch=master)
+
 [![Mux](http://pkg.julialang.org/badges/Mux_0.3.svg)](http://pkg.julialang.org/?pkg=Mux)
 [![Mux](http://pkg.julialang.org/badges/Mux_0.4.svg)](http://pkg.julialang.org/?pkg=Mux)
 

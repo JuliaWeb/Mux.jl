@@ -39,15 +39,26 @@ function ws_handler(app::App)
   return handler
 end
 
-const default_port = 8000
-
-function serve(s::Server, port = default_port)
-  @async @errs run(s, port)
+function serve(s::Server; args...)
+  params = Dict(args)
+  port = get(params, :port, 8000)
+  use_https = haskey(params, :ssl)
+  if use_https
+       @async @errs run(s, port=port, ssl=params[:ssl])
+  else
+       @async @errs run(s, port)
+  end
   return
 end
 
-serve(h::App, port = default_port) =
-  serve(Server(http_handler(h)), port)
+serve(h::App, port::Integer = default_port) =
+  serve(Server(http_handler(h)), port=port)
 
-serve(h::App, w::App, port = default_port) =
-  serve(Server(http_handler(h), ws_handler(w)), port)
+serve(h::App; args...) =
+  serve(Server(http_handler(h)); args...)
+
+serve(h::App, w::App, port::Integer = default_port) =
+  serve(Server(http_handler(h), ws_handler(w)), port=port)
+
+serve(h::App, w::App; args...) =
+  serve(Server(http_handler(h), ws_handler(w)); args...)

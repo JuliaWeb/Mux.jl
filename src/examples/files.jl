@@ -7,6 +7,9 @@ export files
 Base.joinpath() = ""
 
 function validpath(root, path; dirs = true)
+  if normpath(root) == "."
+    root = pwd()
+  end
   full = normpath(root, path)
   startswith(full, root) &&
     (isfile(full) || (dirs && isdir(full)))

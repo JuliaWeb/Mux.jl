@@ -19,7 +19,7 @@ function matchpath(target, path)
   params = d()
   for i = 1:length(target)
     if startswith(target[i], ":")
-      params[symbol(target[i][2:end])] = path[i]
+      params[Symbol(target[i][2:end])] = path[i]
     else
       target[i] == path[i] || return
     end

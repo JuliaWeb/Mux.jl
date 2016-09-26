@@ -41,13 +41,13 @@ end
 
 const default_port = 8000
 
-function serve(s::Server, port = default_port)
-  @async @errs run(s, port)
+function serve(s::Server, port = default_port; kws...)
+  @async @errs run(s; port = port, kws...)
   return
 end
 
-serve(h::App, port = default_port) =
-  serve(Server(http_handler(h)), port)
+serve(h::App, port = default_port; kws...) =
+  serve(Server(http_handler(h)), port; kws...)
 
 serve(h::App, w::App, port = default_port) =
   serve(Server(http_handler(h), ws_handler(w)), port)

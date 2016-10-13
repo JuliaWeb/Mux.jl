@@ -20,7 +20,7 @@ extension(f) = ormatch(match(r"(?<=\.)[^\.\\/]*$", f), "")
 fileheaders(f) = d("Content-Type" => get(mimetypes, extension(f), "application/octet-stream"))
 
 fileresponse(f) = d(:file => f,
-                    :body => open(readbytes, f),
+                    :body => read(f),
                     :headers => fileheaders(f))
 
 fresp(f) =

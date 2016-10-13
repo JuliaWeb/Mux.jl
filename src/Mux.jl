@@ -2,6 +2,8 @@ module Mux
 
 export mux, stack, branch
 
+using Compat
+
 # This might be the smallest core ever.
 
 mux(f) = f

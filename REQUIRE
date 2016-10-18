@@ -5,3 +5,4 @@ HttpCommon
 HttpServer
 URIParser
 WebSockets
+Compat

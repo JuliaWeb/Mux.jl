@@ -5,4 +5,4 @@ HttpCommon
 HttpServer
 URIParser
 WebSockets
-Compat
+Compat 0.7.9

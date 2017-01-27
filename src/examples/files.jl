@@ -52,3 +52,12 @@ dirresponse(f) =
             div(".box", table([tr(td(".file", filelink(f, x)),
                                   td(".size", string(filesize(joinpath(f, x)))))
                                for x in ["..", readdir(f)...]]))))
+
+const ASSETS_DIR = "assets"
+function packagefiles(dirs=true)
+    absdir(req) = Pkg.dir(req[:params][:pkg], ASSETS_DIR)
+    branch(req -> validpath(absdir(req), joinpath(req[:path]...), dirs=dirs),
+           req -> fresp(joinpath(absdir(req), req[:path]...)))
+end
+
+const pkgfiles = route("pkg/:pkg", packagefiles(), Mux.notfound())

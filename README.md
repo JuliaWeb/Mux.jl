@@ -191,3 +191,7 @@ For example:
 * `respond(x)` – creates an endpoint that responds with `x`, regardless of the request.
 * `route("/path/here", app)` – branches to `app` if the request location matches `"/path/here"`.
 * `page("/path/here", app)` – branches to `app` if the request location *exactly* matches `"/path/here"`
+
+## Serving static files from a package
+
+The `Mux.pkgfiles` middleware (included in `Mux.defaults`) serves static files under the `assets` directory in any Julia package at `/pkg/<PACKAGE>/`.

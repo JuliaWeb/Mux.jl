@@ -30,7 +30,7 @@ include("websockets_integration.jl")
 include("examples/basic.jl")
 include("examples/files.jl")
 
-defaults = stack(todict, basiccatch, splitquery, toresponse)
+defaults = stack(todict, basiccatch, splitquery, toresponse, pkgfiles)
 wdefaults = stack(todict, wcatch, splitquery)
 
 end

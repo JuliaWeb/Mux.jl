@@ -17,6 +17,7 @@ function todict(req::Request)
   req′[:headers]  = req.headers
   req′[:resource] = req.target
   req′[:data] = req.body
+  req′[:uri] = URI(req.target)
   return req′
 end
 

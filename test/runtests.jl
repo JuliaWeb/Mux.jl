@@ -19,3 +19,9 @@ serve(test)
             "<h1>Boo!</h1>"
 @test Requests.text(Requests.get("http://localhost:8000/user/julia")) ==
             "<h1>Hello, julia!</h1>"
+
+# Test Response d::Associative
+import HttpCommon: Response, Cookie
+
+response = Response(Dict(:status => 400, :cookies => Dict("cookies" => Cookie("cookie-name", "value"))))
+@test response.cookies["cookies"].name == "cookie-name"

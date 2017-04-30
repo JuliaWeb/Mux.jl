@@ -56,7 +56,7 @@ status(s) = reskey(:status, s)
 
 mux_css = """
   body { font-family: sans-serif; padding:50px; }
-  .box { background: #fcfcff; padding:20px; border: 1px solid #ddd; border-radius:5px; }
+  .box { background: #fcfcff; padding:20px; border: 1px solid #ddd; border-radius:5px; white-space: pre-wrap; word-wrap: break-word; }
   pre { line-height:1.5 }
   a { text-decoration:none; color:#225; }
   a:hover { color:#336; }

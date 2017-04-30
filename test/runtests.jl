@@ -21,9 +21,19 @@ serve(test)
 @test Requests.text(Requests.get("http://localhost:8000/user/julia")) ==
             "<h1>Hello, julia!</h1>"
 
-# Test Response d::Associative
-import HttpCommon: Response, Cookie
+function hello_cookie(req)
+  Dict(:body => "Hello Cookie",
+       :cookies => Dict("a" => Dict("value" => "b", "path" => "/", "secure" => true,
+                                    "http-only" => true, "same-site" => "lax",
+                                    "expires" => "2015-12-31", "max-age" => Dates.Minute(1)),
+                        "c" => Dict("value" => "d")))
+end
 
+with_cookies = stack(Mux.wrap_cookies)
+@app test_cookies = (with_cookies, hello_cookie)
+serve(test_cookies, 8001)
+
+@test Requests.get("http://localhost:8001").cookies["c"] == Cookie("c", "d")
 
 response = Response(Dict(:status => 400, :cookies => Dict("cookies" => Cookie("cookie-name", "value"))))
 @test response.cookies["cookies"].name == "cookie-name"

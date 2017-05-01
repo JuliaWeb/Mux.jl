@@ -3,6 +3,7 @@ Lazy
 Hiccup
 HttpCommon
 HttpServer
+MbedTLS 0.3.0
 URIParser
 WebSockets
 Compat 0.7.9

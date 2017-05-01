@@ -24,6 +24,7 @@ using Hiccup
 include("server.jl")
 include("basics.jl")
 include("routing.jl")
+include("wrap_cookies.jl")
 
 include("websockets_integration.jl")
 

@@ -32,12 +32,16 @@ params!(req) = get!(req, :params, d())
 
 # Response
 
-import HttpCommon: Response
+import HttpCommon: Response, Cookie
+
+Response(s::Int, h::HttpCommon.Headers, d::HttpCommon.HttpData, c::Dict) =
+  Response(s, h, c, d, Nullable(), Response[], false, Request[])
 
 Response(d::Associative) =
   Response(get(d, :status, 200),
            convert(Headers, get(d, :headers, HttpCommon.headers())),
-           get(d, :body, ""))
+           get(d, :body, ""),
+           get(d, :cookies, Dict{String, Cookie}()))
 
 Response(o) = Response(stringmime(MIME"text/html"(), o))
 

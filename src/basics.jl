@@ -1,3 +1,4 @@
+import Compat: String, take!
 using Lazy, HttpServer, HttpCommon, URIParser
 
 export respond, mux
@@ -84,6 +85,7 @@ function basiccatch(app, req)
     println(io, "<pre class=\"box\">")
     showerror(io, e, catch_backtrace())
     println(io, "</pre>")
-    return d(:status => 500, :body => takebuf_string(io))
+    showerror(STDERR, e, catch_backtrace()) # logging error to std out
+    return d(:status => 500, :body => String(take!(io)))
   end
 end

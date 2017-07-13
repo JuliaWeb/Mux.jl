@@ -86,6 +86,6 @@ function basiccatch(app, req)
     showerror(io, e, catch_backtrace())
     println(io, "</pre>")
     showerror(STDERR, e, catch_backtrace()) # logging error to std out
-    return d(:status => 500, :body => String(take!(io))
+    return d(:status => 500, :body => String(take!(io)))
   end
 end

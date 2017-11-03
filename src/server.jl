@@ -1,4 +1,4 @@
-using HttpServer, Lazy
+using HTTP.Nitrogen, HTTP.HandlerFunction, Lazy
 
 import Base.Meta.isexpr
 
@@ -27,27 +27,37 @@ macro app(def)
   end
 end
 
+# conversion functions for known http_handler return objects
+mk_response(d) = d
+function mk_response(d::Dict)
+  r = HTTP.Response(get(d, :status, 200))
+  haskey(d, :body) && (r.body = HTTP.FIFOBuffer(d[:body]))
+  haskey(d, :headers) && (r.headers = d[:headers])
+  return r
+end
+
 function http_handler(app::App)
-  handler = HttpHandler((req, res) -> app.warez(req))
-  handler.events["error"]  = (client, error) -> println(error)
-  handler.events["listen"] = (port)          -> println("Listening on $port...")
+  handler = HandlerFunction((req, res) -> mk_response(app.warez(req)))
+  # handler.events["error"]  = (client, error) -> println(error)
+  # handler.events["listen"] = (port)          -> println("Listening on $port...")
   return handler
 end
 
 function ws_handler(app::App)
-  handler = WebSocketHandler((req, client) -> app.warez((req, client)))
+  handler = HandlerFunction((req, client) -> mk_response(app.warez((req, client))))
   return handler
 end
 
 const default_port = 8000
+const localhost = ip"127.0.0.1"
 
 function serve(s::Server, port = default_port; kws...)
-  @async @errs run(s; port = port, kws...)
+  @async @errs HTTP.serve(s, localhost, port; kws...)
   return
 end
 
 serve(h::App, port = default_port; kws...) =
-  serve(Server(http_handler(h)), port; kws...)
+    serve(Server(http_handler(h)), port; kws...)
 
 serve(h::App, w::App, port = default_port) =
-  serve(Server(http_handler(h), ws_handler(w)), port)
+    serve(Server(http_handler(h), ws_handler(w)), port)

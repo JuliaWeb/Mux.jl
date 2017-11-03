@@ -1,6 +1,5 @@
 using Hiccup
 import Hiccup.div
-import HttpServer.mimetypes
 
 export files
 
@@ -15,9 +14,7 @@ end
 ormatch(r::RegexMatch, x) = r.match
 ormatch(r::Void, x) = x
 
-extension(f) = ormatch(match(r"(?<=\.)[^\.\\/]*$", f), "")
-
-fileheaders(f) = d("Content-Type" => get(mimetypes, extension(f), "application/octet-stream"))
+fileheaders(f) = d("Content-Type" => "application/octet-stream") # TODO: switch to using HTTP.sniff
 
 fileresponse(f) = d(:file => f,
                     :body => read(f),

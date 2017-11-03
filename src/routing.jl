@@ -1,4 +1,4 @@
-using HttpCommon
+using HTTP
 
 export method, GET, route, page, probabilty
 

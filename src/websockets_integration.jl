@@ -1,11 +1,11 @@
-using WebSockets
-
-function todict(rc::Tuple{Request, WebSocket})
-  req, client = rc
-  req′ = todict(req)
-  req′[:socket] = client
-  return req′
-end
+#using WebSockets
+#
+#function todict(rc::Tuple{Request, WebSocket})
+#  req, client = rc
+#  req′ = todict(req)
+#  req′[:socket] = client
+#  return req′
+#end
 
 function wcatch(app, req)
   try

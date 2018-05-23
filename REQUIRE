@@ -4,5 +4,6 @@ Hiccup
 HttpCommon
 HttpServer
 URIParser
+AssetRegistry
 WebSockets
 Compat 0.7.9

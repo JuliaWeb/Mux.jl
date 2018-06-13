@@ -55,7 +55,18 @@ dirresponse(f) =
 
 const ASSETS_DIR = "assets"
 function packagefiles(dirs=true)
-    absdir(req) = Pkg.dir(req[:params][:pkg], ASSETS_DIR)
+    loadpaths = unique(vcat(Pkg.dir(), LOAD_PATH))
+    function absdir(req)
+        pkg = req[:params][:pkg]
+        for p in loadpaths
+            dir = joinpath(p, pkg, ASSETS_DIR)
+            if isdir(dir)
+                return dir
+            end
+        end
+        Pkg.dir(pkg, ASSETS_DIR)
+    end
+
     branch(req -> validpath(absdir(req), joinpath(req[:path]...), dirs=dirs),
            req -> fresp(joinpath(absdir(req), req[:path]...)))
 end

@@ -3,9 +3,11 @@ os:
   - linux
   - osx
 julia:
-  - 0.4
-  - 0.5
+  - 0.6
   - nightly
+matrix:
+  allow_failures:
+    - julia: nightly
 notifications:
   email: false
 git:

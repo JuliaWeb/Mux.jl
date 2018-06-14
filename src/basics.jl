@@ -1,5 +1,7 @@
 using Lazy, HTTP
 
+import HTTP.Request
+
 export respond, mux
 
 # Utils
@@ -33,7 +35,7 @@ params!(req) = get!(req, :params, d())
 
 import HTTP: Response
 
-Response(d::Associative) =
+Response(d::AbstractDict) =
   Response(get(d, :status, 200),
            convert(HTTP.Headers, get(d, :headers, HTTP.Headers())),
            get(d, :body, ""))

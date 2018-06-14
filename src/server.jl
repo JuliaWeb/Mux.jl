@@ -1,5 +1,6 @@
-using HTTP.Nitrogen, HTTP.HandlerFunction, Lazy
+using HTTP.Servers, Lazy, Compat.Sockets
 
+import HTTP.HandlerFunction
 import Base.Meta.isexpr
 
 export @app, serve
@@ -9,7 +10,7 @@ export @app, serve
 # In general these methods provide a simple way to
 # get up and running, but aren't meant to be comprehensive.
 
-type App
+mutable struct App
   warez
 end
 
@@ -31,7 +32,7 @@ end
 mk_response(d) = d
 function mk_response(d::Dict)
   r = HTTP.Response(get(d, :status, 200))
-  haskey(d, :body) && (r.body = HTTP.FIFOBuffer(d[:body]))
+  haskey(d, :body) && (r.body = d[:body])
   haskey(d, :headers) && (r.headers = d[:headers])
   return r
 end

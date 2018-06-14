@@ -1,4 +1,4 @@
-using Hiccup
+using Hiccup, Compat.Pkg
 import Hiccup.div
 
 export files
@@ -12,7 +12,7 @@ function validpath(root, path; dirs = true)
 end
 
 ormatch(r::RegexMatch, x) = r.match
-ormatch(r::Void, x) = x
+ormatch(r::Nothing, x) = x
 
 fileheaders(f) = d("Content-Type" => "application/octet-stream") # TODO: switch to using HTTP.sniff
 
@@ -52,7 +52,11 @@ dirresponse(f) =
 
 const ASSETS_DIR = "assets"
 function packagefiles(dirs=true)
-    loadpaths = unique(vcat(Pkg.dir(), LOAD_PATH))
+    @static if VERSION < v"0.7.0-DEV"
+        loadpaths = unique(vcat(Pkg.dir(), LOAD_PATH))
+    else
+        loadpaths = LOAD_PATH
+    end
     function absdir(req)
         pkg = req[:params][:pkg]
         for p in loadpaths

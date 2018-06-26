@@ -40,14 +40,14 @@ The `@app` macro allows the server to be redefined on the fly, and you
 can test this by editing the `hello` text and re-evaluating. (don't
 re-evalute `serve(test)`)
 
-## Technical Overview
+## Technical Overview
 
 Mux.jl is at heart a control flow library, with a [very small core](https://github.com/one-more-minute/Mux.jl/blob/master/src/Mux.jl#L7-L16). It's not important to understand that code exactly as long as you understand what it achieves.
 
 There are three concepts core to Mux.jl: Middleware (which should be familiar
 from the web libraries of other languages), stacking, and branching.
 
-### Apps and Middleware
+### Apps and Middleware
 
 An *app* or *endpoint* is simply a function of a request which produces
 a response:
@@ -103,7 +103,7 @@ mux(username, myapp)
 This returns a *new* function which is equivalent to `app2` above. We
 just didn't have to write it by hand.
 
-### Stacking
+### Stacking
 
 Now suppose you have lots of middleware – one to parse the HTTP request into
 a dict of properties, one to check user authentication, one to catches errors,
@@ -171,7 +171,7 @@ We can also define a function to wrap the branch
 probabilty(x, app) = branch(_ -> rand() < x, app)
 ```
 
-### Utilities
+### Utilities
 
 Despite the fact that endpoints and middleware are so important in Mux,
 it's common to not write them by hand. For example, `respond("hi")`

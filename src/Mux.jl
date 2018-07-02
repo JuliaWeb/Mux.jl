@@ -1,3 +1,4 @@
+__precompile__()
 module Mux
 
 export mux, stack, branch

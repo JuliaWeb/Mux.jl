@@ -1,6 +1,6 @@
-using HttpCommon
+using HttpCommon, URIParser
 
-export method, GET, route, page, probabilty
+export method, GET, scheme, HTTP, HTTPS, route, page, probabilty
 
 # Request type
 
@@ -8,6 +8,19 @@ method(m::AbstractString, app...) = branch(req -> req[:method] == m, app...)
 method(ms, app...) = branch(req -> req[:method] in ms, app...)
 
 GET(app...) = method("GET", app...)
+
+#URL scheme type
+
+function getscheme(req)
+  uri = URI(req.uri)
+  return uri.scheme
+end
+
+scheme(scm::AbstractString, app...) = branch(req -> getscheme(req) == scm, app...)
+scheme(scms, app...) = branch(req -> getscheme(req) in scms, app...)
+
+HTTPS(app...) = scheme("HTTPS", app...)
+HTTP(app...) = scheme("HTTP", app...)
 
 # Path routing
 

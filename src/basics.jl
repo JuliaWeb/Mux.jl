@@ -15,7 +15,7 @@ function todict(req::Request)
   req′ = Dict()
   req′[:method]   = req.method
   req′[:headers]  = req.headers
-  req′[:resource] = req.uri
+  req′[:resource] = req.target
   req′[:data] = read(req.body)
   return req′
 end

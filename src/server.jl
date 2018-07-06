@@ -38,7 +38,7 @@ function mk_response(d::Dict)
 end
 
 function http_handler(app::App)
-  handler = HandlerFunction((req, res) -> mk_response(app.warez(req)))
+  handler = HandlerFunction((req) -> mk_response(app.warez(req)))
   # handler.events["error"]  = (client, error) -> println(error)
   # handler.events["listen"] = (port)          -> println("Listening on $port...")
   return handler

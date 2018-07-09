@@ -16,16 +16,20 @@ function todict(req::Request)
   req′[:method]   = req.method
   req′[:headers]  = req.headers
   req′[:resource] = req.target
-  req′[:data] = read(req.body)
+  req′[:data] = req.body
   return req′
 end
 
 todict(app, req) = app(todict(req))
 
 function splitquery(app, req)
-  uri = req[:resource]
-  req[:path]  = splitpath(HTTP.path(uri))
-  req[:query] = HTTP.query(uri)
+  target = req[:resource]
+  req[:path] = split(target, "?")[1]
+  if occursin("?" ,target)
+      req[:query] = split(target, "?")[2]
+  else
+      req[:query] = ""
+  end
   app(req)
 end
 

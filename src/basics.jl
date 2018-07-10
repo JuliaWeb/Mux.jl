@@ -39,10 +39,12 @@ params!(req) = get!(req, :params, d())
 
 import HTTP: Response
 
+
 Response(d::AbstractDict) =
-  Response(get(d, :status, 200),
-           convert(HTTP.Headers, get(d, :headers, HTTP.Headers())),
-           get(d, :body, ""))
+    Response(get(d, :status, 200),
+            convert(HTTP.Headers, get(d, :headers, HTTP.Headers()));
+            body = get(d, :body, ""))
+
 
 Response(o) = Response(stringmime(MIME"text/html"(), o))
 

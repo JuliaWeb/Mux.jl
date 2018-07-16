@@ -22,14 +22,13 @@ end
 
 todict(app, req) = app(todict(req))
 
+using HTTP.URIs: URI
+
 function splitquery(app, req)
-  target = req[:resource]
-  req[:path] = split(target, "?")[1]
-  if occursin("?" ,target)
-      req[:query] = split(target, "?")[2]
-  else
-      req[:query] = ""
-  end
+  uri = URI(req[:resource])
+  delete!(req, :resource)
+  req[:path] = splitpath(uri.path)
+  req[:query] = uri.query
   app(req)
 end
 

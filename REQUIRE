@@ -1,9 +1,7 @@
-julia 0.6
+julia 0.7-
 Lazy
 Hiccup
-HttpCommon
-HttpServer
-URIParser
 AssetRegistry
 WebSockets
+HTTP
 Compat 0.7.9

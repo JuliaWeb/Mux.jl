@@ -1,6 +1,5 @@
-using Hiccup
+using Hiccup, Compat.Pkg
 import Hiccup.div
-import HttpServer.mimetypes
 
 export files
 
@@ -13,11 +12,9 @@ function validpath(root, path; dirs = true)
 end
 
 ormatch(r::RegexMatch, x) = r.match
-ormatch(r::Void, x) = x
+ormatch(r::Nothing, x) = x
 
-extension(f) = ormatch(match(r"(?<=\.)[^\.\\/]*$", f), "")
-
-fileheaders(f) = d("Content-Type" => get(mimetypes, extension(f), "application/octet-stream"))
+fileheaders(f) = d("Content-Type" => "application/octet-stream") # TODO: switch to using HTTP.sniff
 
 fileresponse(f) = d(:file => f,
                     :body => read(f),
@@ -55,7 +52,11 @@ dirresponse(f) =
 
 const ASSETS_DIR = "assets"
 function packagefiles(dirs=true)
-    loadpaths = unique(vcat(Pkg.dir(), LOAD_PATH))
+    @static if VERSION < v"0.7.0-DEV"
+        loadpaths = unique(vcat(Pkg.dir(), LOAD_PATH))
+    else
+        loadpaths = LOAD_PATH
+    end
     function absdir(req)
         pkg = req[:params][:pkg]
         for p in loadpaths

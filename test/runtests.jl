@@ -13,9 +13,9 @@ using HTTP
   page("/user/:user", req -> "<h1>Hello, $(req[:params][:user])!</h1>"),
   Mux.notfound())
 serve(test)
-@test readstring(HTTP.body(HTTP.get("http://localhost:8000"))) ==
+@test String(HTTP.body(HTTP.get("http://localhost:8000"))) ==
             "<h1>Hello World!</h1>"
-@test readstring(HTTP.body(HTTP.get("http://localhost:8000/about"))) ==
+@test String(HTTP.body(HTTP.get("http://localhost:8000/about"))) ==
             "<h1>Boo!</h1>"
-@test readstring(HTTP.body(HTTP.get("http://localhost:8000/user/julia"))) ==
+@test String(HTTP.body(HTTP.get("http://localhost:8000/user/julia"))) ==
             "<h1>Hello, julia!</h1>"

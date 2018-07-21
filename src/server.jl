@@ -2,6 +2,7 @@ using HTTP.Servers, Lazy, Compat.Sockets
 
 import HTTP.HandlerFunction
 import Base.Meta.isexpr
+import WebSockets
 
 export @app, serve
 
@@ -45,7 +46,7 @@ function http_handler(app::App)
 end
 
 function ws_handler(app::App)
-  handler = HandlerFunction((req, client) -> mk_response(app.warez((req, client))))
+  handler = WebSockets.WebsocketHandler((req, client) -> mk_response(app.warez((req, client))))
   return handler
 end
 
@@ -61,4 +62,4 @@ serve(h::App, port = default_port; kws...) =
     serve(Server(http_handler(h)), port; kws...)
 
 serve(h::App, w::App, port = default_port) =
-    serve(Server(http_handler(h), ws_handler(w)), port)
+    WebSockets.serve(WebSockets.ServerWS(http_handler(h), ws_handler(w)), port)

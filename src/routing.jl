@@ -11,7 +11,7 @@ GET(app...) = method("GET", app...)
 
 # Path routing
 
-splitpath(p::AbstractString) = split(p, "/", keep=false)
+splitpath(p::AbstractString) = split(p, "/", keepempty=false)
 splitpath(p) = p
 
 function matchpath(target, path)

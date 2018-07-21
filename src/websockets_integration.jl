@@ -25,6 +25,7 @@ function echo(req)
   while isopen(sock)
     try
       write(sock, read(sock))
+    catch
     end
   end
 end

@@ -36,16 +36,13 @@ params!(req) = get!(req, :params, d())
 
 # Response
 
-import HTTP: Response
-
-
 Response(d::AbstractDict) =
-    Response(get(d, :status, 200),
+    HTTP.Response(get(d, :status, 200),
             convert(HTTP.Headers, get(d, :headers, HTTP.Headers()));
             body = get(d, :body, ""))
 
 
-Response(o) = Response(stringmime(MIME"text/html"(), o))
+Response(o) = HTTP.Response(stringmime(MIME"text/html"(), o))
 
 response(d) = d
 response(s::AbstractString) = d(:body=>s)

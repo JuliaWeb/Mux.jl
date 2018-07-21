@@ -11,7 +11,11 @@ GET(app...) = method("GET", app...)
 
 # Path routing
 
-splitpath(p::AbstractString) = split(p, "/", keep=false)
+  @static if VERSION < v"0.7.0-DEV.4724"
+      splitpath(p::AbstractString) = split(p, "/", keep=false)
+  else
+      splitpath(p::AbstractString) = split(p, "/", keepempty=false)
+  end
 splitpath(p) = p
 
 function matchpath(target, path)

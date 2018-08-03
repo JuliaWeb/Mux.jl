@@ -3,7 +3,7 @@ module Mux
 
 export mux, stack, branch
 
-using Compat
+using Base64: stringmime
 
 # This might be the smallest core ever.
 

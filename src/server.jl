@@ -1,4 +1,4 @@
-using HTTP.Servers, Lazy, Compat.Sockets
+using HTTP.Servers, Lazy, Sockets
 
 import HTTP.HandlerFunction
 import Base.Meta.isexpr

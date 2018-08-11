@@ -38,7 +38,7 @@ params!(req) = get!(req, :params, d())
 
 Response(d::AbstractDict) =
     HTTP.Response(get(d, :status, 200),
-            convert(HTTP.Headers, get(d, :headers, HTTP.Headers()));
+            get(d, :headers, HTTP.Headers());
             body = get(d, :body, ""))
 
 

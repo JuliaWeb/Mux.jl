@@ -1,4 +1,4 @@
-using Hiccup, Compat.Pkg
+using Hiccup, Pkg
 import Hiccup.div
 
 export files
@@ -70,7 +70,7 @@ function packagefiles(dirs=true)
 
     branch(req -> validpath(absdir(req), joinpath(req[:path]...), dirs=dirs),
            req -> (Base.warn_once("""
-                        Relying on /pkg/ is now deprecated. Please use the package 
+                        Relying on /pkg/ is now deprecated. Please use the package
                         `AssetRegistry.jl` instead to register assets directory
                         """);
                    fresp(joinpath(absdir(req), req[:path]...))))
@@ -83,7 +83,7 @@ using AssetRegistry
 
 function assetserve(dirs=true)
     absdir(req) = AssetRegistry.registry["/assetserver/" * req[:params][:key]]
-    branch(req -> (isfile(absdir(req)) && isempty(req[:path])) || 
+    branch(req -> (isfile(absdir(req)) && isempty(req[:path])) ||
            validpath(absdir(req), joinpath(req[:path]...), dirs=dirs),
            req -> fresp(joinpath(absdir(req), req[:path]...)))
 end

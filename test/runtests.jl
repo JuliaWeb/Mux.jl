@@ -1,5 +1,5 @@
 using Mux
-using Base.Test
+using Test
 using Lazy
 using HTTP
 
@@ -13,9 +13,9 @@ using HTTP
   page("/user/:user", req -> "<h1>Hello, $(req[:params][:user])!</h1>"),
   Mux.notfound())
 serve(test)
-@test String(HTTP.body(HTTP.get("http://localhost:8000"))) ==
+@test String(HTTP.get("http://localhost:8000").body) ==
             "<h1>Hello World!</h1>"
-@test String(HTTP.body(HTTP.get("http://localhost:8000/about"))) ==
+@test String(HTTP.get("http://localhost:8000/about").body) ==
             "<h1>Boo!</h1>"
-@test String(HTTP.body(HTTP.get("http://localhost:8000/user/julia"))) ==
+@test String(HTTP.get("http://localhost:8000/user/julia").body) ==
             "<h1>Hello, julia!</h1>"

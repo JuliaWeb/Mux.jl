@@ -20,7 +20,7 @@ macro app(def)
   name, warez = def.args
   warez = isexpr(warez, :tuple) ? Expr(:call, :mux, map(esc, warez.args)...) : warez
   quote
-    if isdefined($(Expr(:quote, name)))
+    if @isdefined($name)
       $(esc(name)).warez = $warez
     else
       const $(esc(name)) = App($warez)

@@ -52,11 +52,7 @@ dirresponse(f) =
 
 const ASSETS_DIR = "assets"
 function packagefiles(dirs=true)
-    @static if VERSION < v"0.7.0-DEV"
-        loadpaths = unique(vcat(Pkg.dir(), LOAD_PATH))
-    else
-        loadpaths = LOAD_PATH
-    end
+    loadpaths = LOAD_PATH
     function absdir(req)
         pkg = req[:params][:pkg]
         for p in loadpaths

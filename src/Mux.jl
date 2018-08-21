@@ -27,6 +27,7 @@ include("routing.jl")
 
 include("websockets_integration.jl")
 
+include("examples/mimetypes.jl")
 include("examples/basic.jl")
 include("examples/files.jl")
 

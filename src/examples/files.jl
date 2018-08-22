@@ -11,10 +11,9 @@ function validpath(root, path; dirs = true)
     (isfile(full) || (dirs && isdir(full)))
 end
 
-ormatch(r::RegexMatch, x) = r.match
-ormatch(r::Nothing, x) = x
+extension(f) = last(splitext(f))[2:end]
 
-fileheaders(f) = d("Content-Type" => "application/octet-stream") # TODO: switch to using HTTP.sniff
+fileheaders(f) = d("Content-Type" => get(mimetypes, extension(f), "application/octet-stream"))
 
 fileresponse(f) = d(:file => f,
                     :body => read(f),

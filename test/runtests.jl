@@ -19,3 +19,9 @@ serve(test)
             "<h1>Boo!</h1>"
 @test String(HTTP.get("http://localhost:8000/user/julia").body) ==
             "<h1>Hello, julia!</h1>"
+
+# Issue #68
+@test Mux.fileheaders("foo.css")["Content-Type"] == "text/css"
+@test Mux.fileheaders("foo.html")["Content-Type"] == "text/html"
+@test Mux.fileheaders("foo.js")["Content-Type"] == "application/javascript"
+

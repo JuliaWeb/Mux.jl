@@ -58,7 +58,7 @@ function serve(s::Server, host = localhost, port = default_port; kws...)
   return
 end
 
-serve(s::Server, port::Integer) = serve(h, w, localhost, port)
+serve(s::Server, port::Integer) = serve(s, localhost, port)
 
 serve(h::App, args...; kws...) =
     serve(Server(http_handler(h)), args...; kws...)

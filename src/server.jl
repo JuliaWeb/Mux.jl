@@ -58,7 +58,7 @@ function serve(s::Server, host = localhost, port = default_port; kws...)
   return
 end
 
-serve(s::Server, port::Int) = serve(h, w, localhost, port)
+serve(s::Server, port::Integer) = serve(h, w, localhost, port)
 
 serve(h::App, args...; kws...) =
     serve(Server(http_handler(h)), args...; kws...)
@@ -66,4 +66,4 @@ serve(h::App, args...; kws...) =
 serve(h::App, w::App, host = localhost, port = default_port) =
     WebSockets.serve(WebSockets.ServerWS(http_handler(h), ws_handler(w)), host, port)
 
-serve(h::App, w::App, port::Int) = serve(h, w, localhost, port)
+serve(h::App, w::App, port::Integer) = serve(h, w, localhost, port)

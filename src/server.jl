@@ -55,7 +55,6 @@ const localhost = ip"127.0.0.1"
 
 function serve(s::Server, host = localhost, port = default_port; kws...)
   @async @errs HTTP.serve(s, host, port; kws...)
-  return
 end
 
 serve(s::Server, port::Integer) = serve(s, localhost, port)

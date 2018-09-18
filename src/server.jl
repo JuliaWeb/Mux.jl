@@ -18,9 +18,9 @@ end
 macro app(def)
   @assert isexpr(def, :(=))
   name, warez = def.args
-  warez = isexpr(warez, :tuple) ? Expr(:call, :mux, map(esc, warez.args)...) : warez
+  warez = isexpr(warez, :tuple) ? Expr(:call, :mux, map(esc, warez.args)...) : esc(warez)
   quote
-    if @isdefined($name)
+    if $(Expr(:isdefined, esc(name)))
       $(esc(name)).warez = $warez
     else
       const $(esc(name)) = App($warez)

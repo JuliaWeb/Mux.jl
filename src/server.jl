@@ -23,7 +23,7 @@ macro app(def)
     if $(Expr(:isdefined, esc(name)))
       $(esc(name)).warez = $warez
     else
-      const $(esc(name)) = App($warez)
+      $(esc(name)) = App($warez)
     end
     nothing
   end

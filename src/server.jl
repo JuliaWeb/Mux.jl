@@ -51,11 +51,10 @@ function ws_handler(app::App)
 end
 
 const default_port = 8000
-const localhost = ip"127.0.0.1"
+const localhost = ip"0.0.0.0"
 
 function serve(s::Server, host = localhost, port = default_port; kws...)
   @async @errs HTTP.serve(s, host, port; kws...)
-  return
 end
 
 serve(s::Server, port::Integer) = serve(s, localhost, port)

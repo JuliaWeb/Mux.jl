@@ -87,6 +87,6 @@ function basiccatch(app, req)
     println(io, "<pre class=\"box\">")
     showerror(io, e, catch_backtrace())
     println(io, "</pre>")
-    return d(:status => 500, :body => String(take!(io)))
+    return d(:status => 500, :body => codeunits(String(take!(io))))
   end
 end

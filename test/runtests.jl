@@ -25,3 +25,8 @@ serve(test)
 @test Mux.fileheaders("foo.html")["Content-Type"] == "text/html"
 @test Mux.fileheaders("foo.js")["Content-Type"] == "application/javascript"
 
+function f()
+  @app foo = (Mux.defaults)
+end
+
+@test f() == nothing

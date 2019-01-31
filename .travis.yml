@@ -3,16 +3,13 @@ os:
   - linux
   - osx
 julia:
-  - 0.4
-  - 0.5
+  - 0.7
+  - 1.0
   - nightly
+matrix:
+  allow_failures:
+    - julia: nightly
 notifications:
   email: false
-git:
-  depth: 999999
-#script: # use the default script which is equivalent to the following
-#  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-#  - julia -e 'Pkg.clone(pwd()); Pkg.build("Mux")'
-#  - julia -e 'Pkg.test("Mux", coverage=true)'
 after_success:
-  - julia -e 'cd(Pkg.dir("Mux")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
+  - julia -e 'using Pkg; import Mux; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'

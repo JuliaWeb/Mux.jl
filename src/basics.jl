@@ -1,4 +1,6 @@
-using Lazy, HttpServer, HttpCommon, URIParser
+using Lazy, HTTP
+
+import HTTP.Request
 
 export respond, mux
 
@@ -13,18 +15,21 @@ function todict(req::Request)
   req′ = Dict()
   req′[:method]   = req.method
   req′[:headers]  = req.headers
-  req′[:resource] = req.resource
-  req.data != "" && (req′[:data] = req.data)
+  req′[:resource] = req.target
+  req′[:data] = req.body
   req′[:uri] = req.uri
+
   return req′
 end
 
 todict(app, req) = app(todict(req))
 
+using HTTP.URIs: URI
+
 function splitquery(app, req)
   uri = URI(req[:resource])
   delete!(req, :resource)
-  req[:path]  = splitpath(uri.path)
+  req[:path] = splitpath(uri.path)
   req[:query] = uri.query
   app(req)
 end
@@ -33,14 +38,13 @@ params!(req) = get!(req, :params, d())
 
 # Response
 
-import HttpCommon: Response
+Response(d::AbstractDict) =
+    HTTP.Response(get(d, :status, 200),
+            get(d, :headers, HTTP.Headers());
+            body = get(d, :body, ""))
 
-Response(d::Associative) =
-  Response(get(d, :status, 200),
-           convert(Headers, get(d, :headers, HttpCommon.headers())),
-           get(d, :body, ""))
 
-Response(o) = Response(stringmime(MIME"text/html"(), o))
+Response(o) = HTTP.Response(stringmime(MIME"text/html"(), o))
 
 response(d) = d
 response(s::AbstractString) = d(:body=>s)
@@ -57,7 +61,7 @@ status(s) = reskey(:status, s)
 
 mux_css = """
   body { font-family: sans-serif; padding:50px; }
-  .box { background: #fcfcff; padding:20px; border: 1px solid #ddd; border-radius:5px; }
+  .box { background: #fcfcff; padding:20px; border: 1px solid #ddd; border-radius:5px; white-space: pre-wrap; word-wrap: break-word; }
   pre { line-height:1.5 }
   a { text-decoration:none; color:#225; }
   a:hover { color:#336; }
@@ -85,6 +89,6 @@ function basiccatch(app, req)
     println(io, "<pre class=\"box\">")
     showerror(io, e, catch_backtrace())
     println(io, "</pre>")
-    return d(:status => 500, :body => takebuf_string(io))
+    return d(:status => 500, :body => codeunits(String(take!(io))))
   end
 end

@@ -1,6 +1,5 @@
-using Hiccup
+using Hiccup, Pkg
 import Hiccup.div
-import HttpServer.mimetypes
 
 export files
 
@@ -12,10 +11,7 @@ function validpath(root, path; dirs = true)
     (isfile(full) || (dirs && isdir(full)))
 end
 
-ormatch(r::RegexMatch, x) = r.match
-ormatch(r::Void, x) = x
-
-extension(f) = ormatch(match(r"(?<=\.)[^\.\\/]*$", f), "")
+extension(f) = last(splitext(f))[2:end]
 
 fileheaders(f) = d("Content-Type" => get(mimetypes, extension(f), "application/octet-stream"))
 
@@ -55,9 +51,36 @@ dirresponse(f) =
 
 const ASSETS_DIR = "assets"
 function packagefiles(dirs=true)
-    absdir(req) = Pkg.dir(req[:params][:pkg], ASSETS_DIR)
+    loadpaths = LOAD_PATH
+    function absdir(req)
+        pkg = req[:params][:pkg]
+        for p in loadpaths
+            dir = joinpath(p, pkg, ASSETS_DIR)
+            if isdir(dir)
+                return dir
+            end
+        end
+        Pkg.dir(pkg, ASSETS_DIR)
+    end
+
     branch(req -> validpath(absdir(req), joinpath(req[:path]...), dirs=dirs),
-           req -> fresp(joinpath(absdir(req), req[:path]...)))
+           req -> (Base.warn_once("""
+                        Relying on /pkg/ is now deprecated. Please use the package
+                        `AssetRegistry.jl` instead to register assets directory
+                        """);
+                   fresp(joinpath(absdir(req), req[:path]...))))
 end
 
 const pkgfiles = route("pkg/:pkg", packagefiles(), Mux.notfound())
+
+
+using AssetRegistry
+
+function assetserve(dirs=true)
+    absdir(req) = AssetRegistry.registry["/assetserver/" * req[:params][:key]]
+    branch(req -> (isfile(absdir(req)) && isempty(req[:path])) ||
+           validpath(absdir(req), joinpath(req[:path]...), dirs=dirs),
+           req -> fresp(joinpath(absdir(req), req[:path]...)))
+end
+
+const assetserver = route("assetserver/:key", assetserve(), Mux.notfound())

@@ -2,7 +2,7 @@ module Mux
 
 export mux, stack, branch
 
-using Compat
+using Base64: stringmime
 
 # This might be the smallest core ever.
 
@@ -27,10 +27,11 @@ include("routing.jl")
 
 include("websockets_integration.jl")
 
+include("examples/mimetypes.jl")
 include("examples/basic.jl")
 include("examples/files.jl")
 
-defaults = stack(todict, basiccatch, splitquery, toresponse, pkgfiles)
+defaults = stack(todict, basiccatch, splitquery, toresponse, assetserver, pkgfiles)
 wdefaults = stack(todict, wcatch, splitquery)
 
 end

@@ -47,7 +47,7 @@ page(app::Function, p) = page(p, app)
 # Query routing
 
 function matchquery(q, req)
-  qdict = parsequerystring(req[:query])
+  qdict = HTTP.URIs.queryparams(req[:query])
   length(q) != length(qdict) && return false
   for (key, value) in q
     if haskey(qdict, key) && (value == "" || value == qdict[key])
@@ -59,7 +59,8 @@ function matchquery(q, req)
   return true
 end
 
-query(q::Dict{<:AbstractString, <:AbstractString}, app...) = branch(req -> matchquery(q, req), app...)
+query(q::Dict{<:AbstractString, <:AbstractString}, app...) =
+  branch(req -> matchquery(q, req), app...)
 
 # Misc
 

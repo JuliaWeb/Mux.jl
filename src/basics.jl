@@ -18,6 +18,7 @@ function todict(req::Request)
   req′[:resource] = req.target
   req′[:data] = req.body
   req′[:uri] = URI(req.target)
+  req′[:cookies]  = HTTP.Cookies.cookies(req)
   return req′
 end
 

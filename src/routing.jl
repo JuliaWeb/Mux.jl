@@ -1,6 +1,6 @@
 using HTTP
 
-export method, GET, route, page, probabilty
+export method, GET, route, page, probabilty, query
 
 # Request type
 
@@ -43,6 +43,24 @@ page(p::Vector, app...) = branch(req -> length(p) == length(req[:path]) && match
 page(p::AbstractString, app...) = page(splitpath(p), app...)
 page(app...) = page([], app...)
 page(app::Function, p) = page(p, app)
+
+# Query routing
+
+function matchquery(q, req)
+  qdict = HTTP.URIs.queryparams(req[:query])
+  length(q) != length(qdict) && return false
+  for (key, value) in q
+    if haskey(qdict, key) && (value == "" || value == qdict[key])
+      continue
+    else
+      return false
+    end
+  end
+  return true
+end
+
+query(q::Dict{<:AbstractString, <:AbstractString}, app...) =
+  branch(req -> matchquery(q, req), app...)
 
 # Misc
 

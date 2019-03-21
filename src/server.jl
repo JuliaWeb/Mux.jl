@@ -1,6 +1,6 @@
 using HTTP.Servers, Lazy, Sockets
 
-import HTTP.HandlerFunction
+import HTTP.RequestHandlerFunction
 import Base.Meta.isexpr
 import WebSockets
 
@@ -53,14 +53,14 @@ end
 const default_port = 8000
 const localhost = ip"0.0.0.0"
 
-function serve(s::Server, host = localhost, port = default_port; kws...)
+function serve(s::Servers.Server, host = localhost, port = default_port; kws...)
   @async @errs HTTP.serve(s, host, port; kws...)
 end
 
-serve(s::Server, port::Integer) = serve(s, localhost, port)
+serve(s::Servers.Server, port::Integer) = serve(s, localhost, port)
 
 serve(h::App, args...; kws...) =
-    serve(Server(http_handler(h)), args...; kws...)
+    serve(Servers.Server(http_handler(h)), args...; kws...)
 
 serve(h::App, w::App, host = localhost, port = default_port) =
     WebSockets.serve(WebSockets.ServerWS(http_handler(h), ws_handler(w)), host, port)

@@ -60,6 +60,6 @@ end
 serve(h::App, port::Integer) = serve(h, localhost, port)
 
 serve(h::App, w::App, host = localhost, port = default_port) =
-    WebSockets.serve(WebSockets.ServerWS(http_handler(h), ws_handler(w)), host, port)
+    @async @errs WebSockets.serve(WebSockets.ServerWS(http_handler(h), ws_handler(w)), host, port)
 
 serve(h::App, w::App, port::Integer) = serve(h, w, localhost, port)

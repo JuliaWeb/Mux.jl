@@ -53,14 +53,11 @@ end
 const default_port = 8000
 const localhost = ip"0.0.0.0"
 
-function serve(s::Servers.Server, host = localhost, port = default_port; kws...)
-  @async @errs HTTP.serve(s, host, port; kws...)
+function serve(h::App, host = localhost, port = default_port; kws...)
+  @async @errs HTTP.serve(http_handler(h), host, port; kws...)
 end
 
-serve(s::Servers.Server, port::Integer) = serve(s, localhost, port)
-
-serve(h::App, args...; kws...) =
-    serve(Servers.Server(http_handler(h)), args...; kws...)
+serve(h::App, port::Integer) = serve(h, localhost, port)
 
 serve(h::App, w::App, host = localhost, port = default_port) =
     WebSockets.serve(WebSockets.ServerWS(http_handler(h), ws_handler(w)), host, port)

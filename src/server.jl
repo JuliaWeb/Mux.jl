@@ -46,7 +46,7 @@ function http_handler(app::App)
 end
 
 function ws_handler(app::App)
-  handler = WebSockets.WebsocketHandler((req, client) -> mk_response(app.warez((req, client))))
+  handler = WebSockets.WSHandlerFunction((req, client) -> mk_response(app.warez((req, client))))
   return handler
 end
 

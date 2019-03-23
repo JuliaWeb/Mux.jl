@@ -2,5 +2,5 @@ julia 0.7
 Lazy
 Hiccup
 AssetRegistry
-WebSockets 1.5
+WebSockets 1.5.1
 HTTP 0.8

@@ -196,3 +196,53 @@ For example:
 ## Serving static files from a package
 
 The `Mux.pkgfiles` middleware (included in `Mux.defaults`) serves static files under the `assets` directory in any Julia package at `/pkg/<PACKAGE>/`.
+
+## Integrate with WebSocket
+
+You can easily integrate a general HTTP server and a WebSocket server with Mux, here is an example:
+
+Firstly, let's import some modules:
+
+```
+using Mux
+import Mux.WebSockets
+```
+
+Next, let's define the behavior of HTTP server and WebSocket server:
+
+```
+@app h = (
+    Mux.defaults,
+    page("/", respond("<h1>Hello World!</h1>")),
+    Mux.notfound());
+    
+function ws_io(x)
+    conn = x[:socket]
+
+    while !eof(conn)
+        data = WebSockets.readguarded(conn)
+        data_str = String(data[1])
+        println("Received data: " * data_str)
+
+        WebSockets.writeguarded(conn, "Hey, I've received " * data_str)
+    end
+end
+
+@app w = (
+    Mux.wdefaults,
+    route("/ws_io", ws_io),
+    Mux.wclose,
+    Mux.notfound());
+ ```
+ 
+ Finally, run the server:
+ 
+ ```
+ WebSockets.serve(
+    WebSockets.ServerWS(
+        Mux.http_handler(h),
+        Mux.ws_handler(w),
+    ), 2333);
+ ```
+ 
+ Now, if you run the program and access `http://localhost:2333`, you'll see a `Hello World` message, if you access `ws://localhost:2333/ws_io` and send some text to it, the server will reply the same message to the client.

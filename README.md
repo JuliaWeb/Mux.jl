@@ -235,14 +235,30 @@ end
     Mux.notfound());
  ```
  
- Finally, run the server:
+Run the server:
  
- ```
- WebSockets.serve(
+```
+WebSockets.serve(
     WebSockets.ServerWS(
         Mux.http_handler(h),
         Mux.ws_handler(w),
     ), 2333);
- ```
- 
- Now, if you run the program and access `http://localhost:2333`, you'll see a `Hello World` message, if you access `ws://localhost:2333/ws_io` and send some text to it, the server will reply the same message to the client.
+```
+
+And finally, in a separate Julia process, run a client:
+
+```
+using Mux
+import Mux.WebSockets
+
+WebSockets.open("ws://localhost:2333/ws_io") do ws_client
+    WebSockets.writeguarded(ws_client, "Hello World")
+    data, success = WebSockets.readguarded(ws_client)
+    if success
+        println(stderr, ws_client, " received:", String(data))
+    end
+end
+```
+
+Now, if you run both programs, you'll see a `Hello World` message, as the
+server is replying the same message back to the client.

@@ -93,3 +93,12 @@ function basiccatch(app, req)
     return d(:status => 500, :body => codeunits(String(take!(io))))
   end
 end
+
+function stderrcatch(app, req)
+  try
+    app(req)
+  catch e
+    showerror(stderr, e, catch_backtrace())
+    return d(:status => 500, :body => codeunits("Internal server error"))
+  end
+end

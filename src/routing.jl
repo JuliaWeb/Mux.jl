@@ -1,4 +1,4 @@
-using HTTP
+import HTTP
 
 export method, GET, route, page, probabilty, query
 

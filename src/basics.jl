@@ -1,5 +1,6 @@
-using Lazy, HTTP
+using Lazy
 
+import HTTP
 import HTTP.Request
 
 export respond, mux

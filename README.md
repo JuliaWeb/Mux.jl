@@ -195,9 +195,11 @@ For example:
 
 ## Serving static files from a package
 
-**DEPRECATED**: The `Mux.pkgfiles` middleware (included in `Mux.defaults`) serves static files under the `assets` directory in any Julia package at `/pkg/<PACKAGE>/`.
+Please use [AssetRegistry.jl](https://github.com/JuliaGizmos/AssetRegistry.jl) to
+register an assets directory.
 
-Please use the package `AssetRegistry.jl` instead to register assets directory.
+**DEPRECATED**: The `Mux.pkgfiles` middleware (included in `Mux.defaults`) serves static
+files under the `assets` directory in any Julia package at `/pkg/<PACKAGE>/`.
 
 ## Integrate with WebSocket
 

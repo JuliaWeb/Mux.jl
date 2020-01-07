@@ -17,7 +17,7 @@ AssetRegistry = "0.1"
 HTTP = "0.8"
 Hiccup = "0.2"
 Lazy = "0.14"
-WebSockets = "1.5"
+WebSockets = "1"
 julia = "1"
 
 [extras]

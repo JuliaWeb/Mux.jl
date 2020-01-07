@@ -60,14 +60,14 @@ function packagefiles(dirs=true)
                 return dir
             end
         end
-        Pkg.dir(pkg, ASSETS_DIR)
+        Pkg.dir(String(pkg), ASSETS_DIR)  # Pkg.dir doesn't take SubString
     end
 
     branch(req -> validpath(absdir(req), joinpath(req[:path]...), dirs=dirs),
-           req -> (Base.warn_once("""
+           req -> (Base.@warn("""
                         Relying on /pkg/ is now deprecated. Please use the package
                         `AssetRegistry.jl` instead to register assets directory
-                        """);
+                        """, maxlog=1);
                    fresp(joinpath(absdir(req), req[:path]...))))
 end
 

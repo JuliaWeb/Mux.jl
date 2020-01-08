@@ -266,3 +266,13 @@ end
 
 Now, if you run both programs, you'll see a `Hello World` message, as the
 server is replying the same message back to the client.
+
+## Using Mux in Production
+
+While Mux should be perfectly useable in a Production environment, it is not
+recommended to use the `Mux.defaults` stack for a Production application. The
+`basiccatch` middleware it includes will dump potentially sensitive stacktraces
+to the client on error, which is probably not what you want to be serving to
+your clients! An alternative `Mux.prod_defaults` stack is available for
+Production applications, which is just `Mux.defaults` with a `stderrcatch`
+middleware instead (which dumps errors to stderr).

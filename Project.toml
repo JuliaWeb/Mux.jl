@@ -16,7 +16,7 @@ WebSockets = "104b5d7c-a370-577a-8038-80a2059c5097"
 AssetRegistry = "0.1"
 HTTP = "0.8"
 Hiccup = "0.2"
-Lazy = "0.14"
+Lazy = "0.14, 0.15"
 WebSockets = "1"
 julia = "1"
 

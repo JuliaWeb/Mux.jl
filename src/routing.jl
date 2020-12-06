@@ -35,14 +35,17 @@ function matchpath!(target, req)
   return true
 end
 
-route(p, app...) = branch(req -> matchpath!(p, req), app...)
+route(p::Vector, app...) = branch(req -> matchpath!(p, req), app...)
 route(p::AbstractString, app...) = route(splitpath(p), app...)
+route(app...) = route([], app...)
 route(app::Function, p) = route(p, app)
+route(app1::Function, app2::Function) = route([], app1, app2)
 
 page(p::Vector, app...) = branch(req -> length(p) == length(req[:path]) && matchpath!(p, req), app...)
 page(p::AbstractString, app...) = page(splitpath(p), app...)
 page(app...) = page([], app...)
 page(app::Function, p) = page(p, app)
+page(app1::Function, app2::Function) = page([], app1, app2)
 
 # Query routing
 

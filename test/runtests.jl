@@ -67,3 +67,11 @@ serve(test, 8001)
 @test String(HTTP.get("http://localhost:8001/badurl";
                       status_exception=false).body) ==
              "Internal server error"
+
+# Test page() callable without a string argument
+@test page(identity, identity) isa Function
+@test page(identity) isa Function
+
+# Test you can pass the string last if you really want.
+@test page(identity, "") isa Function
+@test route(identity, "") isa Function

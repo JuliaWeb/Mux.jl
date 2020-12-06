@@ -43,6 +43,7 @@ page(p::Vector, app...) = branch(req -> length(p) == length(req[:path]) && match
 page(p::AbstractString, app...) = page(splitpath(p), app...)
 page(app...) = page([], app...)
 page(app::Function, p) = page(p, app)
+page(app1::Function, app2::Function) = page([], app1, app2)
 
 # Query routing
 

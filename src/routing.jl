@@ -1,6 +1,6 @@
 import HTTP
 
-export method, GET, route, page, probabilty, query
+export method, GET, route, page, probability, query
 
 # Request type
 
@@ -64,4 +64,6 @@ query(q::Dict{<:AbstractString, <:AbstractString}, app...) =
 
 # Misc
 
-probabilty(x, app...) = branch(_->rand()<x, app...)
+probability(x, app...) = branch(_->rand()<x, app...)
+# Old typo
+@deprecate probabilty(x, app...) probability(x, app...)

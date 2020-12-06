@@ -25,7 +25,7 @@ using Mux
   Mux.defaults,
   page(respond("<h1>Hello World!</h1>")),
   page("/about",
-       probabilty(0.1, respond("<h1>Boo!</h1>")),
+       probability(0.1, respond("<h1>Boo!</h1>")),
        respond("<h1>About Me</h1>")),
   page("/user/:user", req -> "<h1>Hello, $(req[:params][:user])!</h1>"),
   Mux.notfound())
@@ -169,7 +169,7 @@ mux(branch(_ -> rand() < 0.1, respond("Hello")),
 We can also define a function to wrap the branch
 
 ```jl
-probabilty(x, app) = branch(_ -> rand() < x, app)
+probability(x, app) = branch(_ -> rand() < x, app)
 ```
 
 ### Utilities

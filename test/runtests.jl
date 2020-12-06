@@ -68,9 +68,12 @@ serve(test, 8001)
                       status_exception=false).body) ==
              "Internal server error"
 
-# Test page() callable without a string argument
+# Test page and route are callable without a string argument
+# (previously the first two raised StackOverflowError)
 @test page(identity, identity) isa Function
+@test route(identity, identity) isa Function
 @test page(identity) isa Function
+@test route(identity) isa Function
 
 # Test you can pass the string last if you really want.
 @test page(identity, "") isa Function

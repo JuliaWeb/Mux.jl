@@ -12,6 +12,8 @@ post(f) = (app, req) -> f(app(req))
 
 # Request
 
+using HTTP.URIs: URI
+
 function todict(req::Request)
   req′ = Dict()
   req′[:method]   = req.method
@@ -24,8 +26,6 @@ function todict(req::Request)
 end
 
 todict(app, req) = app(todict(req))
-
-using HTTP.URIs: URI
 
 function splitquery(app, req)
   uri = URI(req[:resource])

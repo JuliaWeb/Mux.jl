@@ -3,7 +3,7 @@ using Lazy
 import HTTP
 import HTTP.Request
 
-export respond, mux
+export respond
 
 # Utils
 

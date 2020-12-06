@@ -1,10 +1,9 @@
 using Mux
 using Test
-using Lazy
 using HTTP
 import HTTP.ExceptionRequest: StatusError
 
-@test Mux.notfound()(d())[:status] == 404
+@test Mux.notfound()(Dict())[:status] == 404
 d1 = Dict("one"=> "1", "two"=> "2")
 d2 = Dict("one"=> "1", "two"=> "")
 # Test basic server

@@ -1,5 +1,3 @@
-using Lazy
-
 import HTTP
 import HTTP.Request
 

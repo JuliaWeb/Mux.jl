@@ -1,4 +1,4 @@
-using Lazy, Sockets
+using Sockets
 
 import HTTP.RequestHandlerFunction
 import Base.Meta.isexpr

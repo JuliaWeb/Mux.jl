@@ -1,5 +1,3 @@
-using Lazy
-
 import HTTP
 
 export method, GET, route, page, probabilty, query

@@ -73,6 +73,7 @@ serve(test, 8001)
              "Internal server error"
 seekstart(mock_stderr)
 @test occursin("An error!", read(mock_stderr, String))
+close(mock_stderr)
 rm(path)
 
 # Test page and route are callable without a string argument

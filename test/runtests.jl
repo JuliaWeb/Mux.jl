@@ -117,15 +117,15 @@ end
   import Mux.WebSockets
 
   @app h = (
-      Mux.defaults,
-      page("/", respond("<h1>Hello World!</h1>")),
-      Mux.notfound());
-    
+    Mux.defaults,
+    page("/", respond("<h1>Hello World!</h1>")),
+    Mux.notfound());
+
   @app w = (
-      Mux.wdefaults,
-      route("/ws_io", Mux.echo),
-      Mux.wclose,
-      Mux.notfound());
+    Mux.wdefaults,
+    route("/ws_io", Mux.echo),
+    Mux.wclose,
+    Mux.notfound());
 
   serve(h, w, 2333)
 

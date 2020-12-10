@@ -85,3 +85,28 @@ rm(path)
 # Test you can pass the string last if you really want.
 @test page(identity, "") isa Function
 @test route(identity, "") isa Function
+
+@testset "WebSockets" begin
+  import Mux.WebSockets
+
+  @app h = (
+      Mux.defaults,
+      page("/", respond("<h1>Hello World!</h1>")),
+      Mux.notfound());
+    
+  @app w = (
+      Mux.wdefaults,
+      route("/ws_io", Mux.echo),
+      Mux.wclose,
+      Mux.notfound());
+
+  serve(h, w, 2333)
+
+  WebSockets.open("ws://localhost:2333/ws_io") do ws_client
+    message = "Hello WebSocket!"
+    WebSockets.writeguarded(ws_client, message)
+    data, success = WebSockets.readguarded(ws_client)
+    @test success
+    @test String(data) == message
+  end
+end

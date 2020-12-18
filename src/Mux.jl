@@ -21,6 +21,7 @@ branch(p, t...) = branch(p, mux(t...))
 
 using Hiccup
 
+include("lazy.jl")
 include("server.jl")
 include("basics.jl")
 include("routing.jl")

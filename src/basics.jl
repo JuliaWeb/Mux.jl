@@ -1,9 +1,7 @@
-using Lazy
-
 import HTTP
 import HTTP.Request
 
-export respond, mux
+export respond
 
 # Utils
 
@@ -11,6 +9,8 @@ pre(f) = (app, req) -> app(f(req))
 post(f) = (app, req) -> f(app(req))
 
 # Request
+
+using HTTP.URIs: URI
 
 function todict(req::Request)
   req′ = Dict()
@@ -24,8 +24,6 @@ function todict(req::Request)
 end
 
 todict(app, req) = app(todict(req))
-
-using HTTP.URIs: URI
 
 function splitquery(app, req)
   uri = URI(req[:resource])

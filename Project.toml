@@ -13,7 +13,7 @@ WebSockets = "104b5d7c-a370-577a-8038-80a2059c5097"
 
 [compat]
 AssetRegistry = "0.1"
-HTTP = "0.8"
+HTTP = "0.8, 0.9"
 Hiccup = "0.2"
 WebSockets = "1"
 julia = "1"

@@ -42,6 +42,7 @@ Response(d::AbstractDict) =
             get(d, :headers, HTTP.Headers());
             body = get(d, :body, ""))
 
+Response(r::HTTP.Response) = r
 
 Response(o) = HTTP.Response(stringmime(MIME"text/html"(), o))
 

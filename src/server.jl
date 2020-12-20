@@ -53,12 +53,29 @@ end
 const default_port = 8000
 const localhost = ip"0.0.0.0"
 
+"""
+    serve(h::App, host=$localhost, port=$default_port; kws...)
+    serve(h::App, port::Int; kws...)
+
+Serve the app `h` at the specified `host` and `port`. Keyword arguments are
+passed to `HTTP.serve`.
+
+Starts an async `Task`. Call `wait(serve(...))` in scripts where you want Julia
+to wait until the server is terminated.
+"""
 function serve(h::App, host = localhost, port = default_port; kws...)
   @async @errs HTTP.serve(http_handler(h), host, port; kws...)
 end
 
-serve(h::App, port::Integer) = serve(h, localhost, port)
+serve(h::App, port::Integer; kws...) = serve(h, localhost, port; kws...)
 
+"""
+    serve(h::App, w::App, host=$localhost, port=$default_port)
+    serve(h::App, w::App, port::Integer)
+
+Start a server that uses `h` to serve regular HTTP requests and `w` to serve
+WebSocket requests.
+"""
 serve(h::App, w::App, host = localhost, port = default_port) =
     @async @errs WebSockets.serve(WebSockets.ServerWS(http_handler(h), ws_handler(w)), host, port)
 

@@ -16,7 +16,6 @@ function todict(req::Request)
   req′ = Dict()
   req′[:method]   = req.method
   req′[:headers]  = req.headers
-  req′[:resource] = req.target
   req′[:data] = req.body
   req′[:uri] = URI(req.target)
   req′[:cookies]  = HTTP.Cookies.cookies(req)
@@ -26,8 +25,7 @@ end
 todict(app, req) = app(todict(req))
 
 function splitquery(app, req)
-  uri = URI(req[:resource])
-  delete!(req, :resource)
+  uri = req[:uri]
   req[:path] = splitpath(uri.path)
   req[:query] = uri.query
   app(req)

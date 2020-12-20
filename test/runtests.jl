@@ -3,6 +3,8 @@ using Test
 using HTTP
 import HTTP.ExceptionRequest: StatusError
 
+@testset "Mux" begin
+
 @testset "misc" begin
   function f()
     @app foo = (Mux.defaults)
@@ -136,4 +138,6 @@ end
     @test success
     @test String(data) == message
   end
+end
+
 end

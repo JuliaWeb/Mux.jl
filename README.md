@@ -204,69 +204,54 @@ files under the `assets` directory in any Julia package at `/pkg/<PACKAGE>/`.
 
 ## Integrate with WebSocket
 
-You can easily integrate a general HTTP server and a WebSocket server with Mux, here is an example:
+You can easily integrate a general HTTP server and a WebSocket server with Mux.
+To do so, define two apps, one for regular HTTP requests, and another that will handle WebSocket connections.
 
-Firstly, let's import some modules:
+Here is a complete example:
 
 ```
 using Mux
-import Mux.WebSockets
-```
 
-Next, let's define the behavior of HTTP server and WebSocket server:
-
-```
+# HTTP Server
 @app h = (
     Mux.defaults,
     page("/", respond("<h1>Hello World!</h1>")),
     Mux.notfound());
-    
-function ws_io(x)
-    conn = x[:socket]
 
-    while !eof(conn)
-        data = WebSockets.readguarded(conn)
-        data_str = String(data[1])
-        println("Received data: " * data_str)
-
-        WebSockets.writeguarded(conn, "Hey, I've received " * data_str)
-    end
-end
-
+# WebSocket server
 @app w = (
     Mux.wdefaults,
-    route("/ws_io", ws_io),
+    route("/ws_io", websocket_example),
     Mux.wclose,
     Mux.notfound());
- ```
- 
-Run the server:
- 
-```
-WebSockets.serve(
-    WebSockets.ServerWS(
-        Mux.http_handler(h),
-        Mux.ws_handler(w),
-    ), 2333);
-```
 
-And finally, in a separate Julia process, run a client:
-
-```
-using Mux
-import Mux.WebSockets
-
-WebSockets.open("ws://localhost:2333/ws_io") do ws_client
-    WebSockets.writeguarded(ws_client, "Hello World")
-    data, success = WebSockets.readguarded(ws_client)
-    if success
-        println(stderr, ws_client, " received:", String(data))
+function websocket_example(x)
+    sock = x[:socket]
+    while !eof(sock)
+        str = String(read(sock))
+        println("Received data: " * str)
+        write(sock, "Hey, I've received " * str)
     end
 end
+
+# Serve both servers on the same port.
+serve(h, w, 2333)
 ```
 
-Now, if you run both programs, you'll see a `Hello World` message, as the
-server is replying the same message back to the client.
+And finally, run a client, optionally in another process:
+
+```
+import Mux.WebSockets
+
+WebSockets.open("ws://localhost:2333/ws_io") do ws
+    write(ws, "Hello World!")
+    data = read(ws)
+    println(stderr, ws, " received: ", String(data))
+end;
+```
+
+Now, if you run both programs, you'll see two `Hello World` messages, as the
+server sends the same message back to the client.
 
 ## Using Mux in Production
 

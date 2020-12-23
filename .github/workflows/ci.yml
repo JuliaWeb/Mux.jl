@@ -7,12 +7,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        julia-version: ['0.7', '1', 'nightly']
+        julia-version: ['1.0', '1', 'nightly']
         julia-arch: [x64, x86]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-        exclude:
+        os: [ubuntu-latest]
+        include:
           - os: macOS-latest
+            julia-arch: x64
+            julia-version: nightly
+          - os: windows-latest
+            julia-arch: x64
+            julia-version: nightly
+          - os: windows-latest
             julia-arch: x86
+            julia-version: nightly
 
     steps:
       - uses: actions/checkout@v2

@@ -108,7 +108,7 @@ just didn't have to write it by hand.
 ### Stacking
 
 Now suppose you have lots of middleware – one to parse the HTTP request into
-a dict of properties, one to check user authentication, one to catches errors,
+a dict of properties, one to check user authentication, one to catch errors,
 etc. `mux` handles this too – just pass it multiple arguments:
 
 ```jl

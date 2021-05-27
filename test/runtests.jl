@@ -114,7 +114,6 @@ end
   @test route(identity, "") isa Function
 end
 
-
 @testset "WebSockets" begin
   import Mux.WebSockets
 
@@ -132,6 +131,34 @@ end
   serve(h, w, 2333)
 
   WebSockets.open("ws://localhost:2333/ws_io") do ws_client
+    message = "Hello WebSocket!"
+    WebSockets.writeguarded(ws_client, message)
+    data, success = WebSockets.readguarded(ws_client)
+    @test success
+    @test String(data) == message
+  end
+end
+
+@testset "Secure WebSockets" begin
+  import Mux.WebSockets
+
+  @app h = (
+    Mux.defaults,
+    page("/", respond("<h1>Hello World!</h1>")),
+    Mux.notfound());
+
+  @app w = (
+    Mux.wdefaults,
+    route("/ws_io", Mux.echo),
+    Mux.wclose,
+    Mux.notfound());
+
+  cert = joinpath(@__DIR__, "test.cert")
+  key = joinpath(@__DIR__, "test.key")
+  #serve(h, w, "127.0.0.1", 2444; sslconfig=WebSockets.SSLConfig(cert, key))
+  serve(h, w, 2444; sslconfig=WebSockets.SSLConfig(cert, key))
+
+  WebSockets.open("wss://localhost:2444/ws_io"; sslconfig=WebSockets.SSLConfig(false)) do ws_client
     message = "Hello WebSocket!"
     WebSockets.writeguarded(ws_client, message)
     data, success = WebSockets.readguarded(ws_client)

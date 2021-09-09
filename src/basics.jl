@@ -75,6 +75,17 @@ error_phrases = ["Looks like someone needs to pay their developers more."
                  "On the bright side, nothing has exploded. Yet."
                  "If this error has frustrated you, try clicking <u>here</u>."]
 
+"""
+Removes Mux anonymous function types and tries to replace it
+with ::MuxClosure. May misidentify function arity [some functions
+(::MuxClosure)(::Dict{Any, Any}) may be shown as (::MuxClosure, ::Dict{Any, Any})]
+"""
+function cleanmuxvars(x::String)
+    rx = r"(Mux.)?var\"\#(\d+|\w+)#(\d+|\w+)\".*}*(,)?(\))?(?<app>.*)::(?<apptype>.*)\)"
+    sb = s"MuxClosure, \g<app>::\g<apptype>)"
+    replace(x, rx => sb)
+end
+                 
 function basiccatch(app, req)
   try
     app(req)
@@ -86,7 +97,8 @@ function basiccatch(app, req)
     println(io, "<pre class=\"box\">")
     showerror(io, e, catch_backtrace())
     println(io, "</pre>")
-    return d(:status => 500, :body => codeunits(String(take!(io))))
+    st = cleanmuxvars(String(take!(io)))
+    return d(:status => 500, :body => codeunits(st))
   end
 end
 
@@ -97,4 +109,16 @@ function stderrcatch(app, req)
     showerror(stderr, e, catch_backtrace())
     return d(:status => 500, :body => codeunits("Internal server error"))
   end
+end
+
+function prettystderrcatch(app, req)
+    try
+        app(req)
+    catch e
+        io = IOBuffer()
+        showerror(io, e, catch_backtrace())
+        st = String(take!(io))
+        println(stderr, cleanmuxvars(st))
+        Dict(:status => 500, :body => codeunits("Internal server error"))
+    end
 end

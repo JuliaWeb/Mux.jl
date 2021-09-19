@@ -209,7 +209,7 @@ To do so, define two apps, one for regular HTTP requests, and another that will 
 
 Here is a complete example:
 
-```
+```julia
 using Mux
 
 # HTTP Server
@@ -240,7 +240,7 @@ serve(h, w, 2333)
 
 And finally, run a client, optionally in another process:
 
-```
+```julia
 import Mux.WebSockets
 
 WebSockets.open("ws://localhost:2333/ws_io") do ws

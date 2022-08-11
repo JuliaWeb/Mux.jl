@@ -1,8 +1,7 @@
 using Sockets
 
-import HTTP.RequestHandlerFunction
 import Base.Meta.isexpr
-import WebSockets
+import HTTP: WebSockets
 
 export @app, serve
 
@@ -39,14 +38,14 @@ function mk_response(d::Dict)
 end
 
 function http_handler(app::App)
-  handler = RequestHandlerFunction((req) -> mk_response(app.warez(req)))
+  handler = (req) -> mk_response(app.warez(req))
   # handler.events["error"]  = (client, error) -> println(error)
   # handler.events["listen"] = (port)          -> println("Listening on $port...")
   return handler
 end
 
 function ws_handler(app::App)
-  handler = WebSockets.WSHandlerFunction((req, client) -> mk_response(app.warez((req, client))))
+  handler = (sock) -> mk_response(app.warez(sock))
   return handler
 end
 
@@ -64,7 +63,7 @@ Starts an async `Task`. Call `wait(serve(...))` in scripts where you want Julia
 to wait until the server is terminated.
 """
 function serve(h::App, host = localhost, port = default_port; kws...)
-  @async @errs HTTP.serve(http_handler(h), host, port; kws...)
+  @errs HTTP.serve!(http_handler(h), host, port; kws...)
 end
 
 serve(h::App, port::Integer; kws...) = serve(h, localhost, port; kws...)
@@ -76,9 +75,8 @@ serve(h::App, port::Integer; kws...) = serve(h, localhost, port; kws...)
 Start a server that uses `h` to serve regular HTTP requests and `w` to serve
 WebSocket requests.
 """
-function serve(h::App, w::App, host = localhost, port = default_port, verbose = false; kwargs...)
-  serverws = WebSockets.ServerWS(http_handler(h), ws_handler(w); kwargs...)
-  @async @errs WebSockets.serve(serverws, host, port, verbose)
+function serve(h::App, w::App, host = localhost, port = default_port, verbose = false; kws...)
+  @errs WebSockets.listen!(ws_handler(w), host, port; verbose, kws...)
 end
 
 serve(h::App, w::App, port::Integer, verbose = false; kwargs...) = serve(h, w, localhost, port, verbose; kwargs...)

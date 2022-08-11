@@ -1,21 +1,23 @@
 using Mux
 using Test
-using HTTP
-import HTTP.ExceptionRequest: StatusError
+using HTTP, MbedTLS
+import HTTP: StatusError, WebSockets
 
+println("Mux")
 @testset "Mux" begin
 
-@testset "misc" begin
+println("misc")
+  @testset "misc" begin
   function f()
     @app foo = (Mux.defaults)
   end
 
-  @test f() == nothing
+  @test f() === nothing
 
   @test Mux.notfound()(Dict())[:status] == 404
 end
 
-
+println("basic server")
 @testset "basic server" begin
   d1 = Dict("one"=> "1", "two"=> "2")
   d2 = Dict("one"=> "1", "two"=> "")
@@ -29,6 +31,7 @@ end
     Mux.notfound())
   serve(test)
 
+  println("page")
   @testset "page" begin
     @test String(HTTP.get("http://localhost:8000").body) ==
                 "<h1>Hello World!</h1>"
@@ -38,6 +41,7 @@ end
                 "<h1>Hello, julia!</h1>"
   end
 
+  println("query")
   @testset "query" begin
     @test String(HTTP.get("http://localhost:8000/dum?one=1&two=2").body) ==
                 "<h1>query1</h1>"
@@ -54,7 +58,7 @@ end
   end
 end
 
-
+println("MIME types")
 @testset "MIME types" begin
   # Issue #68
   @test Mux.fileheaders("foo.css")["Content-Type"] == "text/css"
@@ -62,9 +66,9 @@ end
   @test Mux.fileheaders("foo.js")["Content-Type"] == "application/javascript"
 end
 
-
 # Check that prod_defaults don't completely break things
 # And check prod_defaults error handler
+println("prod defaults")
 @testset "prod defaults" begin
   throwapp() = (_...) -> error("An error!")
 
@@ -100,9 +104,9 @@ end
   rm(path)
 end
 
-
 # Test page and route are callable without a string argument
 # (previously the first two raised StackOverflowError)
+println("bare page()")
 @testset "bare page()" begin
   @test page(identity, identity) isa Function
   @test route(identity, identity) isa Function
@@ -114,9 +118,8 @@ end
   @test route(identity, "") isa Function
 end
 
+println("WebSockets")
 @testset "WebSockets" begin
-  import Mux.WebSockets
-
   @app h = (
     Mux.defaults,
     page("/", respond("<h1>Hello World!</h1>")),
@@ -132,16 +135,14 @@ end
 
   WebSockets.open("ws://localhost:2333/ws_io") do ws_client
     message = "Hello WebSocket!"
-    WebSockets.writeguarded(ws_client, message)
-    data, success = WebSockets.readguarded(ws_client)
-    @test success
-    @test String(data) == message
+    WebSockets.send(ws_client, message)
+    str = WebSockets.receive(ws_client)
+    @test str == message
   end
 end
 
+println("Secure WebSockets")
 @testset "Secure WebSockets" begin
-  import Mux.WebSockets
-
   @app h = (
     Mux.defaults,
     page("/", respond("<h1>Hello World!</h1>")),
@@ -153,17 +154,15 @@ end
     Mux.wclose,
     Mux.notfound());
 
-  cert = joinpath(@__DIR__, "test.cert")
-  key = joinpath(@__DIR__, "test.key")
-  #serve(h, w, "127.0.0.1", 2444; sslconfig=WebSockets.SSLConfig(cert, key))
-  serve(h, w, 2444; sslconfig=WebSockets.SSLConfig(cert, key))
-
-  WebSockets.open("wss://localhost:2444/ws_io"; sslconfig=WebSockets.SSLConfig(false)) do ws_client
+  cert = abspath(joinpath(dirname(pathof(Mux)), "../test", "test.cert"))
+  key = abspath(joinpath(dirname(pathof(Mux)), "../test", "test.key"))
+  s = serve(h, w, "127.0.0.1", 2444; sslconfig=MbedTLS.SSLConfig(cert, key))
+  # serve(h, w, 2444; sslconfig=MbedTLS.SSLConfig(cert, key))
+  WebSockets.open("wss://localhost:2444/ws_io"; sslconfig=MbedTLS.SSLConfig(false)) do ws_client
     message = "Hello WebSocket!"
-    WebSockets.writeguarded(ws_client, message)
-    data, success = WebSockets.readguarded(ws_client)
-    @test success
-    @test String(data) == message
+    WebSockets.send(ws_client, message)
+    str = WebSockets.receive(ws_client)
+    @test str == message
   end
 end
 

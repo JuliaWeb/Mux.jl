@@ -29,7 +29,7 @@ end
 
 function matchpath!(target, req)
   ps = matchpath(target, req[:path])
-  ps == nothing && return false
+  ps === nothing && return false
   merge!(params!(req), ps)
   splice!(req[:path], 1:length(target))
   return true

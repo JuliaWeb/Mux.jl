@@ -227,10 +227,9 @@ using Mux
 
 function websocket_example(x)
     sock = x[:socket]
-    while !eof(sock)
-        str = String(read(sock))
+    for str in sock
         println("Received data: " * str)
-        write(sock, "Hey, I've received " * str)
+        send(sock, "Hey, I've received " * str)
     end
 end
 
@@ -244,9 +243,9 @@ And finally, run a client, optionally in another process:
 import Mux.WebSockets
 
 WebSockets.open("ws://localhost:2333/ws_io") do ws
-    write(ws, "Hello World!")
-    data = read(ws)
-    println(stderr, ws, " received: ", String(data))
+    send(ws, "Hello World!")
+    data = receive(ws)
+    println(stderr, ws, " received: ", data)
 end;
 ```
 

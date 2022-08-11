@@ -1,9 +1,8 @@
-using WebSockets: WebSocket
+using HTTP.WebSockets: WebSocket
 
-function todict(rc::Tuple{Request, WebSocket})
- req, client = rc
- req′ = todict(req)
- req′[:socket] = client
+function todict(sock::WebSocket)
+ req′ = todict(sock.request)
+ req′[:socket] = sock
  return req′
 end
 
@@ -22,10 +21,7 @@ end
 
 function echo(req)
   sock = req[:socket]
-  while isopen(sock)
-    try
-      write(sock, read(sock))
-    catch
-    end
+  for msg in sock
+    send(sock, msg)
   end
 end

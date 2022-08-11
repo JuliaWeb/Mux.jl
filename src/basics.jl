@@ -18,7 +18,7 @@ function todict(req::Request)
   req′[:headers]  = req.headers
   req′[:data] = req.body
   req′[:uri] = URI(req.target)
-  req′[:cookies]  = HTTP.Cookies.cookies(req)
+  req′[:cookies]  = HTTP.cookies(req)
   return req′
 end
 

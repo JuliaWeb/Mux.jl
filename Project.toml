@@ -7,15 +7,14 @@ AssetRegistry = "bf4720bc-e11a-5d0c-854e-bdca1663c893"
 Base64 = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 Hiccup = "9fb69e20-1954-56bb-a84f-559cc56a8ff7"
+MbedTLS = "739be429-bea8-5141-9913-cc70e7f3736d"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 Sockets = "6462fe0b-24de-5631-8697-dd941f90decc"
-WebSockets = "104b5d7c-a370-577a-8038-80a2059c5097"
 
 [compat]
 AssetRegistry = "0.1"
-HTTP = "0.8, 0.9"
+HTTP = "1"
 Hiccup = "0.2"
-WebSockets = "1"
 julia = "1"
 
 [extras]

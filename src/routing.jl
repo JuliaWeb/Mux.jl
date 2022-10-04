@@ -17,7 +17,7 @@ splitpath(p) = p
 function matchpath(target, path)
   length(target) > length(path) && return
   params = d()
-  for i = 1:length(target)
+  for i in eachindex(target)
     if startswith(target[i], ":")
       params[Symbol(target[i][2:end])] = path[i]
     else

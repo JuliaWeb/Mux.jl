@@ -233,8 +233,8 @@ function websocket_example(x)
     end
 end
 
-# Serve both servers on two different ports.
-serve(h, w, 2333, 2334)
+# Serve both servers on the same port.
+serve(h, w, 2333)
 ```
 
 And finally, run a client, optionally in another process:
@@ -242,7 +242,7 @@ And finally, run a client, optionally in another process:
 ```julia
 import Mux.WebSockets
 
-WebSockets.open("ws://localhost:2334/ws_io") do ws
+WebSockets.open("ws://localhost:2333/ws_io") do ws
     send(ws, "Hello World!")
     data = receive(ws)
     println(stderr, ws, " received: ", data)

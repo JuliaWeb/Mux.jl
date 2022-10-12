@@ -131,9 +131,12 @@ println("WebSockets")
     Mux.wclose,
     Mux.notfound());
 
-  serve(h, w, 2333)
+  serve(h, w, 2333, 2334)
 
-  WebSockets.open("ws://localhost:2333/ws_io") do ws_client
+  @test String(HTTP.get("http://localhost:2333/").body) ==
+    "<h1>Hello World!</h1>"
+
+  WebSockets.open("ws://localhost:2334/ws_io") do ws_client
     message = "Hello WebSocket!"
     WebSockets.send(ws_client, message)
     str = WebSockets.receive(ws_client)
@@ -156,9 +159,11 @@ println("Secure WebSockets")
 
   cert = abspath(joinpath(dirname(pathof(Mux)), "../test", "test.cert"))
   key = abspath(joinpath(dirname(pathof(Mux)), "../test", "test.key"))
-  s = serve(h, w, "127.0.0.1", 2444; sslconfig=MbedTLS.SSLConfig(cert, key))
+  s, sw = serve(h, w, "127.0.0.1", 2444, 2445; sslconfig=MbedTLS.SSLConfig(cert, key))
   # serve(h, w, 2444; sslconfig=MbedTLS.SSLConfig(cert, key))
-  WebSockets.open("wss://localhost:2444/ws_io"; sslconfig=MbedTLS.SSLConfig(false)) do ws_client
+  @test String(HTTP.get("https://localhost:2444/"; sslconfig=MbedTLS.SSLConfig(false)).body) ==
+    "<h1>Hello World!</h1>"
+  WebSockets.open("wss://localhost:2445/ws_io"; sslconfig=MbedTLS.SSLConfig(false)) do ws_client
     message = "Hello WebSocket!"
     WebSockets.send(ws_client, message)
     str = WebSockets.receive(ws_client)

@@ -69,14 +69,21 @@ end
 serve(h::App, port::Integer; kws...) = serve(h, localhost, port; kws...)
 
 """
-    serve(h::App, w::App, host=$localhost, port=$default_port, verbose=false; kwargs...)
-    serve(h::App, w::App, port::Integer)
+    serve(h::App, w::App, host=$localhost, port=$default_port; kwargs...)
+    serve(h::App, w::App, port::Integer; kwargs...)
 
 Start a server that uses `h` to serve regular HTTP requests and `w` to serve
 WebSocket requests.
 """
-function serve(h::App, w::App, host = localhost, port = default_port, verbose = false; kws...)
-  @errs WebSockets.listen!(ws_handler(w), host, port; verbose, kws...)
+function serve(h::App, w::App, host = localhost, port = default_port; kws...)
+  server = HTTP.listen!(host, port; kws...) do http
+    if HTTP.WebSockets.isupgrade(http.message)
+      HTTP.WebSockets.upgrade(ws_handler(w), http)
+    else
+      HTTP.streamhandler(http_handler(h))(http)
+    end
+  end
+  return server
 end
 
-serve(h::App, w::App, port::Integer, verbose = false; kwargs...) = serve(h, w, localhost, port, verbose; kwargs...)
+serve(h::App, w::App, port::Integer; kwargs...) = serve(h, w, localhost, port; kwargs...)

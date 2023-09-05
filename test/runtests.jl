@@ -144,8 +144,9 @@ println("WebSockets")
   end
 end
 
-println("Secure WebSockets")
-@testset "Secure WebSockets" begin
+println("SSL/TLS")
+@testset "SSL/TLS" begin
+  # Test that we can serve HTTP and websocket responses over TLS/SSL
   @app h = (
     Mux.defaults,
     page("/", respond("<h1>Hello World!</h1>")),
@@ -160,9 +161,15 @@ println("Secure WebSockets")
   cert = abspath(joinpath(dirname(pathof(Mux)), "../test", "test.cert"))
   key = abspath(joinpath(dirname(pathof(Mux)), "../test", "test.key"))
   serve(h, w, 2444; sslconfig=MbedTLS.SSLConfig(cert, key))
-  @test String(HTTP.get("https://localhost:2444/"; sslconfig=MbedTLS.SSLConfig(false)).body) ==
-    "<h1>Hello World!</h1>"
-  WebSockets.open("wss://localhost:2444/ws_io"; sslconfig=MbedTLS.SSLConfig(false)) do ws_client
+
+  # require_ssl_verification means that the certificates won't be validated
+  # (checked against the certificate authority lists), but we will make proper
+  # TLS/SSL connections, so the tests are still useful.
+
+  http_response = HTTP.get("https://localhost:2444/"; require_ssl_verification=false)
+  @test String(http_response.body) == "<h1>Hello World!</h1>"
+
+  WebSockets.open("wss://localhost:2444/ws_io"; require_ssl_verification=false) do ws_client
     message = "Hello WebSocket!"
     WebSockets.send(ws_client, message)
     str = WebSockets.receive(ws_client)

@@ -23,6 +23,7 @@ using Hiccup
 
 include("lazy.jl")
 include("server.jl")
+include("backtrace_rewriting.jl")
 include("basics.jl")
 include("routing.jl")
 

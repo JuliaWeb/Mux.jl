@@ -84,7 +84,7 @@ function basiccatch(app, req)
     println(io, "<h1>Internal Error</h1>")
     println(io, "<p>$(error_phrases[rand(1:length(error_phrases))])</p>")
     println(io, "<pre class=\"box\">")
-    showerror(io, e, catch_backtrace())
+    mux_showerror(io, e, catch_backtrace())
     println(io, "</pre>")
     return d(:status => 500, :body => codeunits(String(take!(io))))
   end
@@ -95,6 +95,15 @@ function stderrcatch(app, req)
     app(req)
   catch e
     showerror(stderr, e, catch_backtrace())
+    return d(:status => 500, :body => codeunits("Internal server error"))
+  end
+end
+
+function prettierstderrcatch(app, req)
+  try
+    app(req)
+  catch e
+    mux_showerror(stderr, e, catch_backtrace())
     return d(:status => 500, :body => codeunits("Internal server error"))
   end
 end

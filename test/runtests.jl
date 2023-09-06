@@ -177,4 +177,22 @@ println("SSL/TLS")
   end
 end
 
+@testset "rename_mux_closures" begin
+  s1 = """
+    [4] prettystderrcatch(app::Mux.var"#1#2"{typeof(test), Mux.var"#1#2"{Mux.var"#5#6"{Mux.var"#33#34"{Vector{Any}}, Mux.var"#23#24"{String}}, Mux.var"#1#2"{Mux.var"#5#6"{Mux.var"#33#34"{Vector{SubString{String}}}, Mux.var"#1#2"{Mux.var"#5#6"{Mux.var"#37#38"{Float64}, Mux.var"#23#24"{String}}, Mux.var"#23#24"{String}}}, Mux.var"#1#2"{Mux.var"#5#6"{Mux.var"#33#34"{Vector{SubString{String}}}, var"#5#7"}, Mux.var"#1#2"{Mux.var"#21#22"{Mux.var"#25#26"{Symbol, Int64}}, Mux.var"#23#24"{String}}}}}}, req::Dict{Any, Any})"""
+  e1 = "[4] prettystderrcatch(app::Mux.Closure, req::Dict{Any, Any})"
+  @test Mux.rename_mux_closures(s1) == e1
+
+  s2 = """[21] (::Mux.var"#7#8"{Mux.App})(req::HTTP.Messages.Request)"""
+  e2 = """[21] (::Mux.Closure)(req::HTTP.Messages.Request)"""
+  @test Mux.rename_mux_closures(s2) == e2
+
+  # Replace multiple closures at once
+  @test Mux.rename_mux_closures(s1 * '\n' * s2) == e1 * '\n' * e2
+
+  # Leave malformed input alone
+  s3 = """gabble (::Mux.var"#7#8{ gabble"""
+  @test Mux.rename_mux_closures(s3) == s3
+end
+
 end

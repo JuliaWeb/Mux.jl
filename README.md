@@ -218,20 +218,20 @@ using Mux
     page("/", respond("<h1>Hello World!</h1>")),
     Mux.notfound());
 
+function websocket_example(x)
+    sock = x[:socket]
+    for str in sock
+        println("client -> server: ", str)
+        send(sock, "I'm hard of hearing, did you say '$str'?")
+    end
+end
+
 # WebSocket server
 @app w = (
     Mux.wdefaults,
     route("/ws_io", websocket_example),
     Mux.wclose,
     Mux.notfound());
-
-function websocket_example(x)
-    sock = x[:socket]
-    for str in sock
-        println("Received data: " * str)
-        send(sock, "Hey, I've received " * str)
-    end
-end
 
 # Serve both servers on the same port.
 serve(h, w, 2333)
@@ -240,12 +240,12 @@ serve(h, w, 2333)
 And finally, run a client, optionally in another process:
 
 ```julia
-import Mux.WebSockets
+using Mux.WebSockets
 
 WebSockets.open("ws://localhost:2333/ws_io") do ws
     send(ws, "Hello World!")
     data = receive(ws)
-    println(stderr, ws, " received: ", data)
+    println(stderr, "server -> client: ", data)
 end;
 ```
 

@@ -33,8 +33,8 @@ include("examples/mimetypes.jl")
 include("examples/basic.jl")
 include("examples/files.jl")
 
-defaults = stack(todict, basiccatch, splitquery, toresponse, assetserver, pkgfiles)
-wdefaults = stack(todict, wcatch, splitquery)
-prod_defaults = stack(todict, stderrcatch, splitquery, toresponse, assetserver, pkgfiles)
+const defaults = stack(todict, basiccatch, splitquery, toresponse, assetserver, pkgfiles)
+const wdefaults = stack(todict, wcatch, splitquery)
+const prod_defaults = stack(todict, stderrcatch, splitquery, toresponse, assetserver, pkgfiles)
 
 end

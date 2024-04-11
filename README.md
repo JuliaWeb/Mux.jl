@@ -211,6 +211,7 @@ Here is a complete example:
 
 ```julia
 using Mux
+using HTTP.WebSockets: send
 
 # HTTP Server
 @app h = (

@@ -255,13 +255,15 @@ server sends the same message back to the client.
 
 ## Using Mux with Revise.jl for Development
 
-Because Revise.jl cannot easily update variables, but functions, there is an easy alternative style to use Mux which works well with Revise.jl.
+[Revise.jl](https://timholy.github.io/Revise.jl/stable/) does not work well with Mux's `@app` macro because it tracks function definitions, not variables.
 
-The initial example is rewritten as follows. Removing the `@app` macro, which would define a variable, and using a function and the `Mux.App` wrapper instead.
+If you would like to use Revise.jl then you can do so by defining your web app as a function and using the `Mux.App` wrapper, as shown in the example below:
+
 ```julia
+# my_web_app.jl
 using Mux
 
-test(req) = req |> mux(
+my_web_app(req) = req |> mux(
   Mux.defaults,
   page(respond("<h1>Hello World!</h1>")),
   page("/about",
@@ -270,9 +272,16 @@ test(req) = req |> mux(
   page("/user/:user", req -> "<h1>Hello, $(req[:params][:user])!</h1>"),
   Mux.notfound(),
 )
-serve(Mux.App(test))
+
+serve(Mux.App(my_web_app))
 ```
-Importantly, Revise.jl will only pick up file changes if a new line is executed in the REPL. So make sure to run the server in a background task like `serve` is doing by default.
+
+```julia-repl
+julia> using Revise
+julia> Revise.includet("my_web_app.jl")
+julia> # Your web app is now running
+julia> # Make some changes to my_web_app.jl and then press enter at the REPL to make Revise detect the changes
+```
 
 ## Using Mux in Production
 

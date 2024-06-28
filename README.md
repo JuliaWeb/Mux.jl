@@ -255,7 +255,7 @@ server sends the same message back to the client.
 
 ## Using Mux with Revise.jl for Development
 
-Because revise cannot easily update variables, but functions, there is an easy alternative style to use Mux which works well with Revise.jl.
+Because Revise.jl cannot easily update variables, but functions, there is an easy alternative style to use Mux which works well with Revise.jl.
 
 The initial example is rewritten as follows. Removing the `@app` macro, which would define a variable, and using a function and the `Mux.App` wrapper instead.
 ```julia

@@ -253,6 +253,36 @@ end;
 Now, if you run both programs, you'll see two `Hello World` messages, as the
 server sends the same message back to the client.
 
+## Using Mux with Revise.jl for Development
+
+[Revise.jl](https://timholy.github.io/Revise.jl/stable/) does not work well with Mux's `@app` macro because it tracks function definitions, not variables.
+
+If you would like to use Revise.jl then you can do so by defining your web app as a function and using the `Mux.App` wrapper, as shown in the example below:
+
+```julia
+# my_web_app.jl
+using Mux
+
+my_web_app(req) = req |> mux(
+  Mux.defaults,
+  page(respond("<h1>Hello World!</h1>")),
+  page("/about",
+       probability(0.1, respond("<h1>Boo!</h1>")),
+       respond("<h1>About Me</h1>")),
+  page("/user/:user", req -> "<h1>Hello, $(req[:params][:user])!</h1>"),
+  Mux.notfound(),
+)
+
+serve(Mux.App(my_web_app))
+```
+
+```julia-repl
+julia> using Revise
+julia> Revise.includet("my_web_app.jl")
+julia> # Your web app is now running
+julia> # Make some changes to my_web_app.jl and then press enter at the REPL to make Revise detect the changes
+```
+
 ## Using Mux in Production
 
 While Mux should be perfectly useable in a Production environment, it is not
